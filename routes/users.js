@@ -8,7 +8,7 @@ const {
   users,
   user,
   followUser
-} = require("../controllers/user")
+} = require("../Controllers/user")
 const {
   protect,
   protectMe
@@ -24,7 +24,7 @@ router.get('/user/:id',protect,user);
 // Update a users information 
 router.put('/user/:id',protect,protectMe,editUser);
 // delete a user's account 
-router.delete('/user/:id',protect,protectMe,deluser);
+router.delete('/user/:id',protect,protectMe,delUser);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
 

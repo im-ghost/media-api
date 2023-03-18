@@ -10,7 +10,7 @@ const {
   userPost,
   commentPost,
   likePost
-} = require("../controllers/post")
+} = require("../Controllers/post")
 const {
   protect,
   protectMe
@@ -26,7 +26,7 @@ router.get('/post/:id',protect,post);
 // Update a posts information 
 router.put('/post/:id',protect,protectMe,editPost);
 // delete a post's account 
-router.delete('/post/:id',protect,protectMe,delpost);
+router.delete('/post/:id',protect,protectMe,delPost);
 // Posts reactions
 // Like a post
 
