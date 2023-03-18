@@ -1,7 +1,7 @@
 const { Schema,model } = require("mongoose")
 
 const UserSchema = new Schema({
-  username: {
+  name: {
     type: String,
     required: true,
     unique: true,
@@ -14,24 +14,28 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
   },
-  status: String,
+
   chats: [{
     type: Schema.Types.ObjectId,
     ref: 'Chat',
   }],
   bio: String,
-  followersCount: {
-    type: Number,
-    default: 0,
+  followers: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
-  followingCount: {
-    type: Number,
-    default: 0,
+  following: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   post: [{
     type: Schema.Types.ObjectId,
     ref: 'Post',
   }],
+  password: {
+    type:String,
+    required:true
+  }
 });
 const User = model("User",UserSchema)
 
