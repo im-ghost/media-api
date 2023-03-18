@@ -1,10 +1,10 @@
 const { Schema,model } = require("mongoose")
+const bcrypt = require("bcryptjs");
 
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
-    unique: true,
+    required: true
   },
   phone: {
     type: String,
@@ -20,14 +20,14 @@ const UserSchema = new Schema({
     ref: 'Chat',
   }],
   bio: String,
-  followers: {
+  followers: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-  },
-  following: {
+  }],
+  following: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-  },
+  }],
   post: [{
     type: Schema.Types.ObjectId,
     ref: 'Post',
@@ -37,6 +37,13 @@ const UserSchema = new Schema({
     required:true
   }
 });
+UserSchema.methods.matchPassword = async function (pass){
+  console.log(this)
+  if(await bcrypt.compare(pass,this.password)){
+    return true
+  }else{
+    return false
+  }
+}
 const User = model("User",UserSchema)
-
 module.exports = User;

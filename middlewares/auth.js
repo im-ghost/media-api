@@ -9,10 +9,13 @@ const generateToken = (id) =>{
 const protect = async (req,res,next) =>{
   const token = req.headers.authorization;
   if (token) {
+ 
     const decodedUser = jwt.verify(token,process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
-      const user = User.findById(id)
+     
+      const user = await User.findById(id)
+    
       req.user = user;
       next()
     }else{
@@ -23,16 +26,16 @@ const protect = async (req,res,next) =>{
   }
 }
 const protectMe = async (req,res,next) =>{
-  const { id } = req.user
-  if (id) {
+  const { _id } = req.user
+  if (_id) {
     
-    if (id.toHexString() === req.params.id) {
+    if (_id.toHexString() === req.params.id) {
       next()
     } else {
       res.status(400).json({"error":"Not authorized"})
     }
   } else {
-    res.status(400).json({"error":"Not authorized"})
+    res.status(400).json({"error":"No user"})
   }
 }
 module.exports = {
