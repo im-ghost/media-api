@@ -4,11 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const postRouter = require('./routes/posts');
+const indexRouter = require('./app/v1/routes/index');
+const usersRouter = require('./app/v1/routes/users');
+const postRouter = require('./app/v1/routes/posts');
 require("dotenv").config()
-const connectDB = require("./config/db");
+const connectDB = require("./app/v1/config/db");
 connectDB()
 const cors = require("cors")
 const app = express();
