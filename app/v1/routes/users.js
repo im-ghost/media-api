@@ -8,7 +8,7 @@ const {
   users,
   user,
   followUser
-} = require("../Controllers/user")
+} = require("../controllers/user")
 const {
   protect,
   protectMe
