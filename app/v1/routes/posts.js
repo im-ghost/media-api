@@ -10,7 +10,7 @@ const {
   userPost,
   commentPost,
   likePost
-} = require("../Controllers/post")
+} = require("../controllers/post")
 const {
   protect,
   protectMe
