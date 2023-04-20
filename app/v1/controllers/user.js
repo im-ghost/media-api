@@ -1,5 +1,5 @@
-const User = require("../Models/User");
-const Post = require("../Models/Post");
+const User = require("../models/User");
+const Post = require("../models/Post");
 const {
   generateToken
 } = require("../middlewares/auth");
@@ -132,7 +132,7 @@ const editUser = async (req,res,next) =>{
 }
 const users = async (req,res,next) =>{
   const users = await User.find({});
-  console.log(users)
+  
   res.status(200).json({users:users})
 }
 const user = async (req,res,next) =>{
@@ -146,15 +146,19 @@ const user = async (req,res,next) =>{
 }
 const followUser = async (req,res,next) =>{
    const { id } = req.params;
-   const { userId } = req.body
+  
   const user = await User.findById(id);
-  const userToFollow = await User.findById(userId);
-  if (user && userToFollow) {
-   user.following.push(userId)
-   userToFollow.followers.push(id)
-  const userFollowed = await userToFollow.save();
-    const updatedUser = await user.save()
-    res.status(200).json({user:updatedUser})
+  const userFollowing = req.user;
+  if (user && userFollowing) {
+    if(!user.includes(userFollowing._id) && !userFollowing.includes(user._id)){
+   user.followers.push(userFollowing._id)
+   userFollowing.following.push(id)
+  const userFollowed = await user.save();
+    const updatedUser = await userFollowing.save()
+    res.status(200).json({userFollowing:updatedUser,userFollowed:userFollowed})
+    }else{
+      res.status(201).json({"message":"Already following user"})
+    }
   } else {
     res.status(400).json({"error":"User not found"})
   }
