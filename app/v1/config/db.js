@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 require("dotenv").config()
 const connectDB = async () =>{
   const mongouri = process.env.MONGO_URI;
+  
   if(!mongouri){
     throw new Error("No mongodb uri")
   }

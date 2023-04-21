@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../Models/User");
+const User = require("../models/User");
 
 const generateToken = (id) =>{
   return jwt.sign({id},process.env.SECRET,{
@@ -9,13 +9,13 @@ const generateToken = (id) =>{
 const protect = async (req,res,next) =>{
   const token = req.headers.authorization;
   if (token) {
- 
+
     const decodedUser = jwt.verify(token,process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
-     
+     console.log(id)
       const user = await User.findById(id)
-    
+    console.log(user)
       req.user = user;
       next()
     }else{

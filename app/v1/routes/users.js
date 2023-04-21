@@ -6,9 +6,9 @@ const {
   delUser,
   editUser,
   users,
-  user,
+  useR:user,
   followUser
-} = require("../Controllers/user")
+} = require("../controllers/user")
 const {
   protect,
   protectMe
