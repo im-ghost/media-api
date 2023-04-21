@@ -9,13 +9,13 @@ const generateToken = (id) =>{
 const protect = async (req,res,next) =>{
   const token = req.headers.authorization;
   if (token) {
- console.log(token)
+
     const decodedUser = jwt.verify(token,process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
-     
+     console.log(id)
       const user = await User.findById(id)
-    
+    console.log(user)
       req.user = user;
       next()
     }else{
