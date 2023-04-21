@@ -6,7 +6,7 @@ const {
   delUser,
   editUser,
   users,
-  user,
+  useR:user,
   followUser
 } = require("../controllers/user")
 const {
