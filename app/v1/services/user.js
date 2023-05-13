@@ -4,9 +4,7 @@ const {
   generateToken
 } = require("../middlewares/auth");
 const bcrypt = require("bcryptjs");
-const editUser = async (reqBody,id) =>{
-  
-}
+
 const delUser = async (id) =>{
   const user = await User.findById(id)
 
@@ -131,7 +129,6 @@ const authUser = async (email,password) =>{
 module.exports = {
   authUser,
   createUser,
-  editUser,
   delUser,
   followUser
 }
