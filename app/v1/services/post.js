@@ -25,10 +25,17 @@ const getAllPostByUser = async (id) =>{
   else return " Posts not found"
 }
 
+const createPost = async (body) =>{
+  const post = await Post.create(body)
+  if(post) return post
+  else return "Error while creating post"
+}
+
 
 module.exports = {
   getAllPost,
   getAllPostByUser,
   getPostById,
-  delPost
+  delPost,
+  createPost
 }
