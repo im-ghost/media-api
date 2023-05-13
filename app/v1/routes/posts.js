@@ -6,7 +6,7 @@ const {
   delPost,
   editPost,
   posts,
-  post,
+  posT,
   userPost,
   commentPost,
   likePost
@@ -22,7 +22,7 @@ router.post('/',createPost);
 // Get a user's post listings 
 router.post('/post/user/:id',userPost);
 // Get a post by id
-router.get('/post/:id',protect,post);
+router.get('/post/:id',protect,posT);
 // Update a posts information 
 router.put('/post/:id',protect,protectMe,editPost);
 // delete a post's account 
