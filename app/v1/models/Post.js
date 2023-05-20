@@ -7,24 +7,33 @@ const PostSchema = new Schema({
     required: true,
   },
   comments: {
-    type: Schema.Types.ObjectId,
-    ref: 'Comment'
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
+    }],
+    default: [],
   },
   image: {
     type: String
   },
   caption: String,
   likes: {
-    type: Schema.Types.ObjectId,
-    ref: 'Like'
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Like',
+    }],
+    default: [],
   },
   content: {
     type: String,
     required: true,
   },
   retweets: {
-    type: Number,
-    default: 0,
+    type:[{
+      type: Schema.Types.ObjectId,
+      ref:'Like'
+    }] ,
+    default: []
   },
 });
 

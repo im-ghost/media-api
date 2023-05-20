@@ -17,8 +17,11 @@ const CommentSchema = new mongoose.Schema({
     required: true,
   },
   likes: {
-    type: Number,
-    default: 0,
+    type:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Like', 
+    }],
+    default: [],
   },
 });
 
