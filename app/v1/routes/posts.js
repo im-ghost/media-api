@@ -25,7 +25,7 @@ router.post('/post/user/:id',userPost);
 // Get a post by id
 router.get('/post/:id',protect,posT);
 // Update a posts information 
-router.put('/post/:id',protect,protectMe,editPost);
+router.put('/post/:id/:author',protect,protectPost,editPost);
 // delete a post's account 
 
 router.put("/post/:id/like",protect,likePost)

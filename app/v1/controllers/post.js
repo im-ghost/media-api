@@ -1,7 +1,7 @@
 const post = require("../services/post")
-const Post = require("../models/Post")
-
-
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const Like = require("../models/Like");
 const createPost = async (req,res,next)=>{
   const dPost = await post.createPost(req.body)
   if(typeof dPost === "object"){
@@ -13,11 +13,13 @@ const createPost = async (req,res,next)=>{
   }
 }
 const editPost = async (req,res)=>{
-  const { body } = req;
-  const dPost = await Post.findById(id);
+  const { body,params } = req;
+  const dPost = await Post.findById(params.id);
   const user = req.user;
   if (dPost) {
+    for(key in dPost){
         dPost[key] = body[key] ? body[key] : dPost[key]
+    }
     await dPost.save()
     res.status(200).json({post:dPost})
   } else {
@@ -30,15 +32,12 @@ const commentPost = async (req,res)=>{
   const dPost = await Post.findById(id);
   const user = req.user;
   if (dPost) {
-    dPost.comments.push({
+    const { _id } = await Comment.create({
       author:user._id,
-      likes:{
-        author:user._id,
-        post:id
-      },
       content:comment,
       post:id
     })
+    dPost.comments.push(_id)
     await dPost.save()
     res.status(200).json({post:dPost})
   } else {
@@ -50,10 +49,11 @@ const likePost = async (req,res)=>{
   const dPost = await Post.findById(id);
   const user = req.user;
   if (dPost) {
-    dPost.likes.push({
-        author:user._id,
-        post:id
+    const { _id } = await Like.create({
+      author:user._id,
+      post:id
     })
+    dPost.likes.push(_id)
     await dPost.save()
     res.status(200).json({post:dPost})
   } else {
