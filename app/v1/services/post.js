@@ -1,5 +1,5 @@
 const Post = require("../models/Post")
-const getAllPost = async () =>{
+const posts = async () =>{
   const posts = await Post.find({})
   return posts
 }
@@ -12,7 +12,7 @@ const getPostById = async (id) =>{
 const delPost = async (id) =>{
   const post = await Post.findById(id)
   if (post) {
-    Post.findByIdAndDelete(id)
+   await Post.findByIdAndDelete(id)
     return true
   } else {
     return "Post not found"
@@ -33,7 +33,7 @@ const createPost = async (body) =>{
 
 
 module.exports = {
-  getAllPost,
+  posts,
   getAllPostByUser,
   getPostById,
   delPost,
