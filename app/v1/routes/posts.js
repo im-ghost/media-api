@@ -13,7 +13,8 @@ const {
 } = require("../controllers/post")
 const {
   protect,
-  protectMe
+  protectMe,
+  protectPost
  } = require("../middlewares/auth")
 /* GET posts listing. */
 router.get('/',protect,posts);
@@ -26,11 +27,12 @@ router.get('/post/:id',protect,posT);
 // Update a posts information 
 router.put('/post/:id',protect,protectMe,editPost);
 // delete a post's account 
-router.delete('/post/:id',protect,protectMe,delPost);
+
+router.put("/post/:id/like",protect,likePost)
+// comment on a post 
+router.put("/post/:id/comment",protect,commentPost)
+router.delete('/post/:id/:author',protect,protectPost,delPost);
 // Posts reactions
 // Like a post
 
-router.post("/post/:id/like",protect,likePost)
-// comment on a post 
-router.post("/post/:id/comment",protect,commentPost)
 module.exports = router
