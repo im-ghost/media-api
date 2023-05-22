@@ -31,13 +31,22 @@ app.use((req, res, next)=>{
 
 // error handler
 app.use((err, req, res, next)=>{
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+  if(err.name
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  if (err.name === "CastError" && err.kind === "ObjectId") {
+    statusCode = 404;
+    message = "Resource not found"
+  }
   // render the error page
-  res.status(err.status || 500);
-  res.send(err);
+  res.status(statusCode);
+  res.send({
+    message,
+    stack:err.stack
+  });
 });
 const port = process.env.PORT || 5000;
 app.listen(port,()=>{
