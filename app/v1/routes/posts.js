@@ -9,7 +9,8 @@ const {
   posT,
   userPost,
   commentPost,
-  likePost
+  likePost,
+  getAllPostByUser
 } = require("../controllers/post")
 const {
   protect,
@@ -17,9 +18,9 @@ const {
   protectPost
  } = require("../middlewares/auth")
 /* GET posts listing. */
-router.get('/',protect,posts);
-//create a new post
-router.post('/',createPost);
+router.route("/").get(protect,posts).post(createPost);
+//getting all users posts
+router.get("/:id",getAllPostByUser)
 // Get a user's post listings 
 router.post('/post/user/:id',userPost);
 // Get a post by id
