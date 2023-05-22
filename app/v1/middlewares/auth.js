@@ -1,16 +1,22 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const generateToken = (id) =>{
-  return jwt.sign({id},process.env.SECRET,{
+const generateToken = (res,userId) =>{
+   const token = jwt.sign({userId},process.env.SECRET,{
     expiresIn:"30d"
+  })
+  res.cookie('token',token,{
+    httpOnly:true,
+    secure:process.env.NODE_ENV !== "development",
+    sameSite:"strict",
+    maxAge: 30*24*60*60*1000
   })
 }
 const protect = async (req,res,next) =>{
-  const token = req.headers.authorization;
+  const token = req.cookies.token;
   if (token) {
 
-    const decodedUser = jwt.verify(token,process.env.SECRET)
+    const decodedUser = jwt.verify(token,process.env.SECRET).select("-password")
     if (decodedUser) {
       const { id } = decodedUser;
       const user = await User.findById(id)
