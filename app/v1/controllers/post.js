@@ -4,6 +4,9 @@ const Comment = require("../models/Comment");
 const Like = require("../models/Like");
 const createPost = async (req,res,next)=>{
   const dPost = await post.createPost(req.body)
+  const user = req.user;
+  user.posts.push(dPost._id)
+  await user.save()
   if(typeof dPost === "object"){
     console.log(dPost)
     res.status(200).json({post:dPost})
