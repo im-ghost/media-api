@@ -6,7 +6,12 @@ const {
   generateToken
 } = require("../middlewares/auth");
 const bcrypt = require("bcryptjs");
-
+const logOutUser = async (req,res,next) => {
+  res.cookie("token","",{
+    httpOnly:true,
+    expires: new Date(0)
+  })
+}
 const authUser = async (req,res,next) =>{
   const { email ,password } = req.body;
   const response = await user.authUser(email, password)
@@ -52,16 +57,7 @@ const editUser = async (req,res,next) =>{
     console.log(user)
     for(const attr in user){
       if(req.body[attr]){
-      if(attr === "password"){
-         var pass= req.body.password;
-        const salt = await bcrypt.genSalt(10)
-       const hash = await bcrypt.hash(req.body.password,salt)
-       pass = hash 
-      console.log(hash)
-      user["password"] = hash
-  }else{
     user[attr] = req.body[attr]
-  }
       }else{
         console.log("   ")
       }
@@ -109,5 +105,6 @@ module.exports = {
   editUser,
   users,
   useR,
-  followUser
+  followUser,
+  logOutUser
 }
