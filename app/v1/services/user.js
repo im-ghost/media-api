@@ -54,6 +54,7 @@ const createUser = async (name, email,password, phone, bio) =>{
   })
 
   if (user) {
+   await generateToken(res,user._id)
     return {
       _id: user._id,
       name: user.name,
@@ -63,10 +64,8 @@ const createUser = async (name, email,password, phone, bio) =>{
       following: user.following,
       bio: user.bio,
       chats: user.chats,
-      phone: user.phone,
-      token: generateToken(user._id),
-      token: generateToken(user._id),
-       password:user.password,
+      phone: user.phone
+       password:user.password
     }
   } else {
     return 'Invalid user data'
@@ -102,6 +101,7 @@ const authUser = async (email,password) =>{
   if (user){
     console.log(user)
      if(await user.matchPassword(password)) {
+     await  generateToken(res,user._id)
     return {
       _id: user._id,
       name: user.name,
@@ -114,7 +114,7 @@ const authUser = async (email,password) =>{
       chats: user.chats,
       
       phone: user.phone,
-      token: generateToken(user._id),
+      
     }
   }
   else{
