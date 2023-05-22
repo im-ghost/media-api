@@ -7,24 +7,20 @@ const {
   editUser,
   users,
   useR:user,
-  followUser
+  followUser,
+  logOutUser
 } = require("../controllers/user")
 const {
   protect,
   protectMe
  } = require("../middlewares/auth")
 /* GET users listing. */
-router.get('/',protect,users);
-//create a new user
-router.post('/',createUser);
+router.route('/').get(protect,users).post(createUser);
 // User login
 router.post('/user/login',authUser);
+router.post('/user/logout',logOutUser);
 // Get a user by id
-router.get('/user/:id',protect,user);
-// Update a users information 
-router.put('/user/:id',protect,protectMe,editUser);
-// delete a user's account 
-router.delete('/user/:id',protect,protectMe,delUser);
+router.route('/user/:id').get(protect,user).put(,protect,protectMe,editUser).delete(protect,protectMe,delUser);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
 
