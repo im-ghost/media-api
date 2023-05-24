@@ -35,9 +35,12 @@ const UserSchema = new Schema({
   password: {
     type:String,
     required:true
-  }
+  },
+  image: {
+    type:String
+  },
 });
-UserSchema.pre("save", async function (next)=>{
+UserSchema.pre("save", async function (next){
   if(!this.isModified()){
     next()
   }
