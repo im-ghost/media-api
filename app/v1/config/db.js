@@ -11,7 +11,7 @@ const connectDB = async () =>{
        useNewUrlParser: true,
       useUnifiedTopology: true
     })
-    console.log("Connected:"+connection.host)
+    console.log("Connected:"+connection.connection.host)
   } catch (e) {
     console.log(e)
     process.exit(1)
