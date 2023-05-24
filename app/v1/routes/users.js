@@ -13,14 +13,16 @@ const {
 const {
   protect,
   protectMe
- } = require("../middlewares/auth")
+ } = require("../middlewares/auth")/*
+ const multer = require("multer")
+ const upload = multer({ destination :"upload/"});*/
 /* GET users listing. */
-router.route('/').get(protect,users).post(createUser);
+router.route('/').get(protect,users).post(/*upload.single("image")*/createUser);
 // User login
-router.post('/user/login',authUser);
-router.post('/user/logout',logOutUser);
+router.post('/login',authUser);
+router.post('/logout',logOutUser);
 // Get a user by id
-router.route('/user/:id').get(protect,user).put(,protect,protectMe,editUser).delete(protect,protectMe,delUser);
+router.route('/user/:id').get(protect,user).put(protect,protectMe,editUser).delete(protect,protectMe,delUser);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
 
