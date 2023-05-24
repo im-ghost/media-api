@@ -1,4 +1,12 @@
-const User = require("../models/User");
+const User = require("../models/User");/*
+const admin = require('firebase-admin');
+const { v4: uuidv4 } = require('uuid');
+const serviceAccount = require('../../../service.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'gs://quiz-app-richard.appspot.com',
+});*/
 
 const {
   generateToken
@@ -15,8 +23,29 @@ const delUser = async (id) =>{
     return false
   }
 }
-const createUser = async (name, email,password, phone, bio) =>{
-  
+const createUser = async (file,res,name, email,password, phone, bio) =>{
+  /*try {
+
+    // Upload the file to Firebase Storage
+    const bucket = admin.storage().bucket();
+    const fileName = `${uuidv4()}-${file.originalname}`;
+    const firebaseResponse = await bucket.upload(file.buffer, {
+      destination: fileName,
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+
+    // Get the download URL from Firebase
+    var downloadUrl = await firebaseResponse[0].getSignedUrl({
+      action: 'read',
+      expires: '03-01-2500', // Set the expiry date as desired
+    });
+
+    
+}catch(e){
+  return "unable to upload image"
+}*/
     if(!email){
     return "No Email"
   } 
@@ -50,7 +79,8 @@ const createUser = async (name, email,password, phone, bio) =>{
    following: [],
    bio: bio,
    chats: [],
-   phone: phone
+   phone: phone,
+  // image:downloadUrl
   })
 
   if (user) {
@@ -64,7 +94,7 @@ const createUser = async (name, email,password, phone, bio) =>{
       following: user.following,
       bio: user.bio,
       chats: user.chats,
-      phone: user.phone
+      phone: user.phone,
        password:user.password
     }
   } else {
@@ -90,7 +120,7 @@ const followUser = async (usER,id) =>{
     return "User not found"
   }
 }
-const authUser = async (email,password) =>{
+const authUser = async (res,email,password) =>{
   if(!email){
     return 'No email'
   }
