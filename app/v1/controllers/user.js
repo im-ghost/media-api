@@ -14,7 +14,7 @@ const logOutUser = async (req,res,next) => {
 }
 const authUser = async (req,res,next) =>{
   const { email ,password } = req.body;
-  const response = await user.authUser(email, password)
+  const response = await user.authUser(res,email, password)
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
@@ -30,9 +30,11 @@ const createUser = async (req,res,next) =>{
     email, 
     password,
     phone,
-    bio
+    bio,
+    
     } = req.body
-    const response = await user.createUser(name, email,password, phone, bio)
+    //const { file } = req
+    const response = await user.createUser(res,name, email,password, phone, bio)
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
