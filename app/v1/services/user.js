@@ -23,7 +23,7 @@ const delUser = async (id) =>{
     return false
   }
 }
-const createUser = async (file,res,name, email,password, phone, bio) =>{
+const createUser = async (res,name, email,password, phone, bio) =>{
   /*try {
 
     // Upload the file to Firebase Storage
