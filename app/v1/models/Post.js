@@ -28,6 +28,10 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
+   date: {
+    type: Date,
+    default: ()=> Date.now(),
+  },
   retweets: {
     type:[{
       type: Schema.Types.ObjectId,
