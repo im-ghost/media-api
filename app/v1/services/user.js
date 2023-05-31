@@ -23,7 +23,7 @@ const delUser = async (id) =>{
     return false
   }
 }
-const createUser = async (res,name, email,password, phone, bio) =>{
+const createUser = async (name, email,password, phone, bio) =>{
   /*try {
 
     // Upload the file to Firebase Storage
@@ -49,23 +49,24 @@ const createUser = async (res,name, email,password, phone, bio) =>{
     if(!email){
     return "No Email"
   } 
-    if(!password){
+    else if(!password){
     return "No password"
   } 
-    if(!bio){
+   else if(!bio){
     return "No bio"
   } 
-    if(!name){
+   else if(!name){
     return "No name"
   } 
-    if(!phone){
+  else if(!phone){
     return "No phone number"
   } else{
   const userExists = await User.findOne({ email })
-   var pass= password;
-  const salt = await bcrypt.genSalt(10)
+  const salt = await bcrypt.genSalt(10);
+ 
    const hash = await bcrypt.hash(password,salt)
-    pass = hash 
+  
+    const pass = hash 
   if (userExists) {
     return 'User already exists'
   }
@@ -84,8 +85,7 @@ const createUser = async (res,name, email,password, phone, bio) =>{
   })
 
   if (user) {
-   await generateToken(res,user._id)
-    return {
+      return {
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -120,7 +120,7 @@ const followUser = async (usER,id) =>{
     return "User not found"
   }
 }
-const authUser = async (res,email,password) =>{
+const authUser = async (email,password) =>{
   if(!email){
     return 'No email'
   }
@@ -131,7 +131,7 @@ const authUser = async (res,email,password) =>{
   if (user){
     console.log(user)
      if(await user.matchPassword(password)) {
-     await  generateToken(res,user._id)
+   
     return {
       _id: user._id,
       name: user.name,
