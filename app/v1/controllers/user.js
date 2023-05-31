@@ -14,10 +14,11 @@ const logOutUser = async (req,res,next) => {
 }
 const authUser = async (req,res,next) =>{
   const { email ,password } = req.body;
-  const response = await user.authUser(res,email, password)
+  const response = await user.authUser(email, password)
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
+      await  generateToken(res,response._id)
     res.status(200).json({user:response})
   }else{
     res.status(500).json({error:"Server Error"})
@@ -34,10 +35,11 @@ const createUser = async (req,res,next) =>{
     
     } = req.body
     //const { file } = req
-    const response = await user.createUser(res,name, email,password, phone, bio)
+    const response = await user.createUser(name, email,password, phone, bio)
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
+    await  generateToken(res,response._id)
     res.status(200).json({user:response})
   }else{
     res.status(500).json({error:"Server Error"})
@@ -59,7 +61,13 @@ const editUser = async (req,res,next) =>{
     console.log(user)
     for(const attr in user){
       if(req.body[attr]){
+        if(attr === "password"){
+          const salt = bcrypt.genSalt(10)
+          const hash = bcrypt.hash(req.body[attr],salt)
+          user["password"] = hash;
+        }else{
     user[attr] = req.body[attr]
+        }
       }else{
         console.log("   ")
       }
