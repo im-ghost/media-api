@@ -39,21 +39,27 @@ const UserSchema = new Schema({
   image: {
     type:String
   },
-});
+});/*
 UserSchema.pre("save", async function (next){
+  console.log("presavs")
   if(!this.isModified()){
     next()
-  }
-  const salt = await bcrypt.genSalt(12)
+  }else{
+  const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password,salt)
   next()
-})
-UserSchema.methods.matchPassword = async function (pass){
-  if(await bcrypt.compare(pass,this.password)){
-    return true
-  }else{
-    return false
   }
-}
+})*/
+UserSchema.methods.matchPassword = async function (pass) {
+  try {
+    const isMatch = await bcrypt.compare(String(pass).trim(), this.password.trim());
+    console.log('isMatch:', isMatch);
+    return isMatch;
+  } catch (error) {
+    console.error('Error comparing passwords:', error);
+    return false;
+  }
+};
+
 const User = model("User",UserSchema)
 module.exports = User;
