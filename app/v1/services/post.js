@@ -1,7 +1,27 @@
 const Post = require("../models/Post")
-const posts = async () =>{
+const posts = async (query=undefined) =>{
   const posts = await Post.find({})
-  return posts
+  if(query){
+    const limit = query.limit || 10
+  const startIndex = query.start ||  0 
+  const endIndex =  limit
+  const sortBy = query.sortBy || 'title'
+  const sortOrder = query.sortOrder || 'asc'
+  const filter = query.filter || ''
+
+  const filteredPosts = posts.filter((post) =>
+    post.name.toLowerCase().includes(filter.toLowerCase())
+  )
+  const sortedPosts = filteredPosts.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a[sortBy] > b[sortBy] ? 1 : -1
+    } else {
+      return a[sortBy] < b[sortBy] ? 1 : -1
+    }
+  })
+  const results = sortedPosts.slice(startIndex, endIndex)
+  }
+  return results 
 }
 
 const getPostById = async (id) =>{
@@ -19,9 +39,36 @@ const delPost = async (id) =>{
   }
 }
 
-const getAllPostByUser = async (id) =>{
+const getAllPostByUser = async (id,query) =>{
   const { posts } = await User.findById(id);
-  if(posts)  return posts
+  
+  if(posts) {
+    const limit = req.query.limit || 10
+  const startIndex = req.query.start ||  0 
+  const endIndex =  limit
+  const sortBy = req.query.sortBy || 'title'
+  const sortOrder = req.query.sortOrder || 'asc'
+  const filter = req.query.filter || ''
+
+  const posts = []
+  for(i=0;i<user.posts.length;i++){
+    const post = await Quiz.findById(user.posts[i])
+    posts.push(post)
+  }
+  const filteredPosts = posts.filter((post) =>
+    post.name.toLowerCase().includes(filter.toLowerCase())
+  )
+  const sortedPosts = filteredPosts.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a[sortBy] > b[sortBy] ? 1 : -1
+    } else {
+      return a[sortBy] < b[sortBy] ? 1 : -1
+    }
+  })
+  const results = sortedPosts.slice(startIndex, endIndex)
+
+  return results 
+  }
   else return " Posts not found"
 }
 
