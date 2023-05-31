@@ -64,7 +64,7 @@ const likePost = async (req,res)=>{
   }
 }
 const userPost = async (req,res)=>{
-  const dPost = await post.getAllPostByUser(req.body.id)
+  const dPost = await post.getAllPostByUser(req.body.id,req.query)
   if(typeof dPost === "object"){
     res.status(200).json({post:dPost})
 
@@ -73,7 +73,7 @@ const userPost = async (req,res)=>{
   }
 }
 const posts = async (req,res)=>{
-  const dPosts = await post.posts();
+  const dPosts = await post.posts(req.query);
   if(typeof dPosts === "object"){
     res.status(200).json({posts:dPosts})
 
