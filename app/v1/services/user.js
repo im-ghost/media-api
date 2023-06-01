@@ -8,6 +8,8 @@ admin.initializeApp({
   storageBucket: 'gs://quiz-app-richard.appspot.com',
 });*/
 
+const NodeCache = require( "node-cache" );
+const userCache = new NodeCache();
 const {
   generateToken
 } = require("../middlewares/auth");
@@ -15,9 +17,10 @@ const bcrypt = require("bcryptjs");
 
 const delUser = async (id) =>{
   const user = await User.findById(id)
-
+  
   if (user) {
     await User.findByIdAndDelete(id)
+    userCache.take(id)
     return true
   } else {
     return false
@@ -85,6 +88,7 @@ const createUser = async (name, email,password, phone, bio) =>{
   })
 
   if (user) {
+    userCache.set(user._id,user)
       return {
       _id: user._id,
       name: user.name,
@@ -95,7 +99,8 @@ const createUser = async (name, email,password, phone, bio) =>{
       bio: user.bio,
       chats: user.chats,
       phone: user.phone,
-       password:user.password
+       password:user.password,
+       token:generateToken(user._id)
     }
   } else {
     return 'Invalid user data'
@@ -142,9 +147,8 @@ const authUser = async (email,password) =>{
       following: user.following,
       bio: user.bio,
       chats: user.chats,
-      
       phone: user.phone,
-      
+       token:generateToken(user._id)
     }
   }
   else{
@@ -160,5 +164,6 @@ module.exports = {
   authUser,
   createUser,
   delUser,
-  followUser
+  followUser,
+  userCache
 }

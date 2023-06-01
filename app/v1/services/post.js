@@ -1,4 +1,6 @@
 const Post = require("../models/Post")
+const NodeCache = require( "node-cache" );
+const postCache = new NodeCache();
 const posts = async (query=undefined) =>{
   const posts = await Post.find({})
   if(query){
@@ -25,14 +27,21 @@ const posts = async (query=undefined) =>{
 }
 
 const getPostById = async (id) =>{
+  const cachedPost = await postCache.get(id)
+  if(cachedPost){
+    return cachedPost;
+  }else{
   const post = await Post.findById(id)
+ await postCache.set(id,post)
   return post
+  }
 }
 
 const delPost = async (id) =>{
   const post = await Post.findById(id)
   if (post) {
    await Post.findByIdAndDelete(id)
+   postCache.take(id)
     return true
   } else {
     return "Post not found"
@@ -74,7 +83,11 @@ const getAllPostByUser = async (id,query) =>{
 
 const createPost = async (body) =>{
   const post = await Post.create(body)
-  if(post) return post
+  if(post) {
+    postCache.set(post._id,post)
+    return post 
+    
+  }
   else return "Error while creating post"
 }
 
@@ -84,5 +97,6 @@ module.exports = {
   getAllPostByUser,
   getPostById,
   delPost,
-  createPost
+  createPost,
+  postCache
 }
