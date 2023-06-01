@@ -24,6 +24,7 @@ const editPost = async (req,res)=>{
         dPost[key] = body[key] ? body[key] : dPost[key]
     }
     await dPost.save()
+    post.postCache.set(dPost._id,dPost)
     res.status(200).json({post:dPost})
   } else {
     res.status(404).json({error: "Could not find the post"})
@@ -42,6 +43,7 @@ const commentPost = async (req,res)=>{
     })
     dPost.comments.push(_id)
     await dPost.save()
+       post.postCache.set(dPost._id,dPost)
     res.status(200).json({post:dPost})
   } else {
     res.status(404).json({error: "Could not find the post"})
@@ -58,6 +60,7 @@ const likePost = async (req,res)=>{
     })
     dPost.likes.push(_id)
     await dPost.save()
+       post.postCache.set(dPost._id,dPost)
     res.status(200).json({post:dPost})
   } else {
     res.status(404).json({error: "Could not find the post"})

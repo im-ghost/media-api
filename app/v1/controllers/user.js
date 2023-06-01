@@ -73,6 +73,7 @@ const editUser = async (req,res,next) =>{
       }
     }
     const updatedUser = await user.save()
+    user.userCache.set(updatedUser._id,updatedUser)
    res.status(200).json({user:updatedUser})
   } else {
    res.status(401).json({error:"User not found"})
