@@ -88,7 +88,6 @@ const posT = async (req,res,next)=>{
   const dPost = await post.getPostById(req.params.id);
   if(typeof dPost === "object"){
     res.status(200).json({post:dPost})
-
   }else{
     res.status(400).json({error: dPost})
   }
