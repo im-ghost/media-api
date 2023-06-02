@@ -1,32 +1,16 @@
 const Post = require("../models/Post")
 const NodeCache = require( "node-cache" );
 const postCache = new NodeCache();
-const posts = async (query=undefined) =>{
+const posts = async () =>{
   const posts = await Post.find({})
-  if(query){
-    const limit = query.limit || 10
-  const startIndex = query.start ||  0 
-  const endIndex =  limit
-  const sortBy = query.sortBy || 'title'
-  const sortOrder = query.sortOrder || 'asc'
-  const filter = query.filter || ''
 
-  const filteredPosts = posts.filter((post) =>
-    post.name.toLowerCase().includes(filter.toLowerCase())
-  )
-  const sortedPosts = filteredPosts.sort((a, b) => {
-    if (sortOrder === 'asc') {
-      return a[sortBy] > b[sortBy] ? 1 : -1
-    } else {
-      return a[sortBy] < b[sortBy] ? 1 : -1
-    }
-  })
-  const results = sortedPosts.slice(startIndex, endIndex)
-  }
-  return results 
+  
+
+  return posts
 }
 
 const getPostById = async (id) =>{
+  if(id && id !== undefined){
   const cachedPost = await postCache.get(id)
   if(cachedPost){
     return cachedPost;
@@ -34,6 +18,9 @@ const getPostById = async (id) =>{
   const post = await Post.findById(id)
  await postCache.set(id,post)
   return post
+  }
+  }else{
+    return "No id"
   }
 }
 
