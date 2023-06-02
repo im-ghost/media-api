@@ -8,10 +8,10 @@ const generateToken = (res,userId) =>{
   return token;
 }
 const protect = async (req,res,next) =>{
-  const token = req.headers.token;
+  const token = req.headers.authorization;
   if (token) {
 
-    const decodedUser = jwt.verify(token,process.env.SECRET).select("-password")
+    const decodedUser = jwt.verify(token,process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
       const user = await User.findById(id)
