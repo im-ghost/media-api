@@ -88,11 +88,13 @@ const users = async (req,res,next) =>{
 }
 const useR = async (req,res,next) =>{
   const { id } = req.params;
+  if(id !== undefined){
   const user = await User.findById(id);
   if (user) {
     res.status(200).json({user:user})
   } else {
     res.status(400).json({"error":"User not found"})
+  }
   }
 }
 const followUser = async (req,res,next) =>{
