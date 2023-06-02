@@ -12,24 +12,24 @@ const {
   likePost
 } = require("../controllers/post")
 const {
-  protect,
+  /*protect,*/
   protectMe,
   protectPost
  } = require("../middlewares/auth")
 /* GET posts listing. */
-router.route("/").get(protect,posts).post(createPost);
+router.route("/").get(/*protect,*/posts).post(createPost);
 // Get a user's post listings 
 router.post('/post/user/:id',userPost);
 // Get a post by id
-router.get('/post/:id',protect,posT);
+router.get('/post/:id',/*protect,*/posT);
 // Update a posts information 
-router.put('/post/:id/:author',protect,protectPost,editPost);
+router.put('/post/:id/:author',/*protect,*/protectPost,editPost);
 // delete a post's account 
 
-router.put("/post/:id/like",protect,likePost)
+router.put("/post/:id/like",/*protect,*/likePost)
 // comment on a post 
-router.put("/post/:id/comment",protect,commentPost)
-router.delete('/post/:id/:author',protect,protectPost,delPost);
+router.put("/post/:id/comment",/*protect,*/commentPost)
+router.delete('/post/:id/:author',/*protect,*/protectPost,delPost);
 // Posts reactions
 // Like a post
 
