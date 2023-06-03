@@ -5,11 +5,7 @@ const {
 } = require("./utils.js")
 let io;
 function initializeSocket(server,Server) {
-   io = new Server(server,{
-  cors:{
-    origin:["http://localhost:3000"]
-  }
-})
+   io = new Server(server)
 
   io.on('connection', (socket) => {
     console.log('New client connected');
