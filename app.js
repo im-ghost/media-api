@@ -15,7 +15,6 @@ connectDB()
 const cors = require("cors")
 const app = express();
 const server = http.createServer(app)
-
 initializeSocket(server,Server)
 app.use(cors({
   origin:["http://localhost:3000"]
@@ -49,10 +48,7 @@ app.use((err, req, res, next)=>{
   });
 });
 const port = process.env.PORT || 5000;
-app.listen(port,()=>{
+server.listen(port,()=>{
   console.log(`Running on port : ${port}`)
 });
-server.listen(5000,()=>{
-  console.log("Running on port 5000")
-})
 module.exports = app;
