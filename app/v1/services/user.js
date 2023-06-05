@@ -88,7 +88,7 @@ const createUser = async (name, email,password, phone, bio) =>{
   })
 
   if (user) {
-    userCache.set(user._id,user)
+    userCache.set(user._id,JSON.stringify(user))
       return {
       _id: user._id,
       name: user.name,
@@ -117,6 +117,7 @@ const followUser = async (usER,id) =>{
    userFollowing.following.push(id)
   const userFollowed = await user.save();
     const updatedUser = await userFollowing.save()
+    userCache.set(user._id,JSON.stringify(updatedUser))
     return {userFollowing:updatedUser,userFollowed:userFollowed}
     }else{
       return "Already following user"
@@ -134,7 +135,7 @@ const authUser = async (email,password) =>{
   }else{
   const user = await User.findOne({ email })
   if (user){
-    console.log(user)
+     userCache.set(user._id,JSON.stringify(user))
      if(await user.matchPassword(password)) {
    
     return {
