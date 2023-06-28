@@ -32,10 +32,10 @@ const createUser = async (req,res,next) =>{
     password,
     phone,
     bio,
-    
+    image
     } = req.body
     //const { file } = req
-    const response = await user.createUser(name, email,password, phone, bio)
+    const response = await user.createUser(name, email,password, phone, bio,image)
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
