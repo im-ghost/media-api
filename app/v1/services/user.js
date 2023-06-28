@@ -1,13 +1,4 @@
-const User = require("../models/User");/*
-const admin = require('firebase-admin');
-const { v4: uuidv4 } = require('uuid');
-const serviceAccount = require('../../../service.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'gs://quiz-app-richard.appspot.com',
-});*/
-
+const User = require("../models/User");
 const NodeCache = require( "node-cache" );
 const userCache = new NodeCache();
 const {
@@ -26,7 +17,7 @@ const delUser = async (id) =>{
     return false
   }
 }
-const createUser = async (name, email,password, phone, bio) =>{
+const createUser = async (name, email,password, phone, bio,image) =>{
   /*try {
 
     // Upload the file to Firebase Storage
@@ -84,11 +75,12 @@ const createUser = async (name, email,password, phone, bio) =>{
    bio: bio,
    chats: [],
    phone: phone,
-  // image:downloadUrl
+  image:image
   })
 
   if (user) {
-    userCache.set(user._id,JSON.stringify(user))
+    let id = user._id.toString()
+    userCache.set(id,JSON.stringify(user))
       return {
       _id: user._id,
       name: user.name,
