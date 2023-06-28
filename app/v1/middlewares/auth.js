@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
 const generateToken = (userId) =>{
   const id = userId.toString();
    const token = jwt.sign({id},process.env.SECRET,{
@@ -12,8 +11,8 @@ const generateToken = (userId) =>{
 const protect = async (req,res,next) =>{
   const token = req.headers.authorization;
   if (token) {
-
-    const decodedUser = jwt.verify(token,process.env.SECRET)
+   
+    const decodedUser = jwt.verify(token.split("")[1],process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
       const user = await User.findById(id)
@@ -28,7 +27,8 @@ const protect = async (req,res,next) =>{
     }else{
       res.status(400).json({"error":"Expired token"})
     }
-  }else{
+  }
+  else{
     res.status(400).json({"error":"No token"})
   }
 }
