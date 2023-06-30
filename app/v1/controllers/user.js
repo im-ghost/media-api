@@ -12,6 +12,27 @@ const logOutUser = async (req,res,next) => {
     expires: new Date(0)
   })
 }
+const oauthLogin = async (req,res,next) =>{
+  const { email  } = req.body;
+  const response = await User.findOne({email:email})
+  if(user){
+    res.status(401).json({user:{
+       _id: user._id,
+      name: user.name,
+      email: user.email,
+      posts: user.posts,
+      followers: user.followers,
+      following: user.following,
+      bio: user.bio,
+      chats: user.chats,
+      phone: user.phone,
+       password:user.password,
+       token:generateToken(user._id)
+    }})
+  }else{
+    res.status(500).json({error:"This account doesn't exist"})
+  }
+}
 const authUser = async (req,res,next) =>{
   const { email ,password } = req.body;
   const response = await user.authUser(email, password)
@@ -119,5 +140,6 @@ module.exports = {
   users,
   useR,
   followUser,
-  logOutUser
+  logOutUser,
+  oauthLogin
 }

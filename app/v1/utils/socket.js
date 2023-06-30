@@ -23,6 +23,7 @@ function initializeSocket(server,Server) {
         io.emit("errorLiking")
       }
     });
+    
     socket.on('commentOnPost', ({postId,userId, comment})=>{
       const post = commentOnPost(postId,userId, comment)
       if(typeof(post).toLowerCase() === "object"){
