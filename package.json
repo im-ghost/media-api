@@ -6,6 +6,9 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
+  "engines":{
+    "node":">=20.2.0"
+  },
   "dependencies": {
     "agenda": "^5.0.0",
     "bcryptjs": "^2.4.3",
