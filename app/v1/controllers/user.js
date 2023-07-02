@@ -15,8 +15,8 @@ const logOutUser = async (req,res,next) => {
 const oauthLogin = async (req,res,next) =>{
   const { email  } = req.body;
   const response = await User.findOne({email:email})
-  if(user){
-    res.status(401).json({user:{
+  if(response){
+    res.status(200).json({user:{
        _id: user._id,
       name: user.name,
       email: user.email,
@@ -27,6 +27,7 @@ const oauthLogin = async (req,res,next) =>{
       chats: user.chats,
       phone: user.phone,
        password:user.password,
+       retweets:[]
        token:generateToken(user._id)
     }})
   }else{

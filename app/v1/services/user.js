@@ -18,28 +18,7 @@ const delUser = async (id) =>{
   }
 }
 const createUser = async (name, email,password, phone, bio,image) =>{
-  /*try {
-
-    // Upload the file to Firebase Storage
-    const bucket = admin.storage().bucket();
-    const fileName = `${uuidv4()}-${file.originalname}`;
-    const firebaseResponse = await bucket.upload(file.buffer, {
-      destination: fileName,
-      metadata: {
-        contentType: file.mimetype,
-      },
-    });
-
-    // Get the download URL from Firebase
-    var downloadUrl = await firebaseResponse[0].getSignedUrl({
-      action: 'read',
-      expires: '03-01-2500', // Set the expiry date as desired
-    });
-
-    
-}catch(e){
-  return "unable to upload image"
-}*/
+  
     if(!email){
     return "No Email"
   } 
@@ -75,7 +54,8 @@ const createUser = async (name, email,password, phone, bio,image) =>{
    bio: bio,
    chats: [],
    phone: phone,
-  image:image
+  image:image,
+  retweets:[]
   })
 
   if (user) {
@@ -92,6 +72,7 @@ const createUser = async (name, email,password, phone, bio,image) =>{
       chats: user.chats,
       phone: user.phone,
        password:user.password,
+       retweets:[]
        token:generateToken(user._id)
     }
   } else {
@@ -141,6 +122,7 @@ const authUser = async (email,password) =>{
       bio: user.bio,
       chats: user.chats,
       phone: user.phone,
+      retweets:[]
        token:generateToken(user._id)
     }
   }

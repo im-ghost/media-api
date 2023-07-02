@@ -9,7 +9,8 @@ const {
   posT,
   userPost,
   commentPost,
-  likePost
+  likePost,
+  retweetPost
 } = require("../controllers/post")
 const {
   protect,
@@ -28,6 +29,9 @@ router.get('/post/:id',posT);
 router.put("/post/like/:id/",protect,likePost)
 // comment on a post 
 router.put("/post/comment/:id/",protect,commentPost)
+router.put("/post/like/:id/",protect,likePost)
+// retweet on a post 
+router.put("/post/retweet/:id/",protect,retweetPost)
 router.delete('/post/:id/:author',protect,protectPost,delPost);
 
 router.put('/post/:id/:author',protect,protectPost,editPost);

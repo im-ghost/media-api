@@ -32,6 +32,10 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Post',
   }],
+  retweets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+  }],
   password: {
     type:String,
     required:true
@@ -53,10 +57,10 @@ UserSchema.pre("save", async function (next){
 UserSchema.methods.matchPassword = async function (pass) {
   try {
     const isMatch = await bcrypt.compare(String(pass).trim(), this.password.trim());
-    console.log('isMatch:', isMatch);
+   
     return isMatch;
   } catch (error) {
-    console.error('Error comparing passwords:', error);
+   
     return false;
   }
 };

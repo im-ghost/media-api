@@ -103,7 +103,14 @@ const delPost = async (req,res,next)=>{
   }
 }
 
-
+const retweetPost = async (req,res,next)=>{
+  const { userId,postId } = req.body;
+  const user = req.user;
+   user.retweets.push(postId);
+ await user.save()
+ res.status(200).json({user:user})
+  
+}
 
 module.exports = {
   createPost,
@@ -113,5 +120,6 @@ module.exports = {
   posT,
   userPost,
   commentPost,
-  likePost
+  likePost,
+  retweetPost
 }
