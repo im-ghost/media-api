@@ -72,7 +72,7 @@ const createUser = async (name, email,password, phone, bio,image) =>{
       chats: user.chats,
       phone: user.phone,
        password:user.password,
-       retweets:[]
+       retweets:[],
        token:generateToken(user._id)
     }
   } else {
@@ -122,7 +122,7 @@ const authUser = async (email,password) =>{
       bio: user.bio,
       chats: user.chats,
       phone: user.phone,
-      retweets:[]
+      retweets:[],
        token:generateToken(user._id)
     }
   }
