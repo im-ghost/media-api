@@ -20,16 +20,16 @@ const oauthLogin = async (req,res,next) =>{
   console.log(response)
   if(response){
     res.status(200).json({user:{
-       _id: user._id,
-      name: user.name,
-      email: user.email,
-      posts: user.posts,
-      followers: user.followers,
-      following: user.following,
-      bio: user.bio,
-      chats: user.chats,
-      phone: user.phone,
-       password:user.password,
+       _id: response._id,
+      name: response.name,
+      email: response.email,
+      posts: response.posts,
+      followers: response.followers,
+      following: response.following,
+      bio: response.bio,
+      chats: response.chats,
+      phone: response.phone,
+       password:response.password,
        retweets:[],
        token:generateToken(response._id)
     }})
@@ -43,7 +43,6 @@ const authUser = async (req,res,next) =>{
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
-      await  generateToken(res,response._id)
     res.status(200).json({user:response})
   }else{
     res.status(500).json({error:"Server Error"})
@@ -64,8 +63,7 @@ const createUser = async (req,res,next) =>{
   if(typeof response === "string"){
     res.status(401).json({error:response})
   }else if(typeof response === "object"){
-    await  generateToken(res,response._id)
-    res.status(200).json({user:response})
+    res.status(200).json({user: response})
   }else{
     res.status(500).json({error:"Server Error"})
   }
