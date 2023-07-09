@@ -30,6 +30,7 @@ const oauthLogin = async (req,res,next) =>{
       chats: response.chats,
       phone: response.phone,
        password:response.password,
+       image:response.image,
        retweets:[],
        token:generateToken(response._id)
     }})
@@ -106,7 +107,7 @@ const editUser = async (req,res,next) =>{
 }
 const users = async (req,res,next) =>{
   const users = await User.find({});
-  
+  console.log(users)
   res.status(200).json({users:users})
 }
 const useR = async (req,res,next) =>{

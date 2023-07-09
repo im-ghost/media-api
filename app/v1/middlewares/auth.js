@@ -12,7 +12,7 @@ const protect = async (req,res,next) =>{
   const token = req.headers.authorization;
   if (token) {
    
-    const decodedUser = jwt.verify(token.split("")[1],process.env.SECRET)
+    const decodedUser = jwt.verify(token,process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
       const user = await User.findById(id)
