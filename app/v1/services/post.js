@@ -11,14 +11,10 @@ const posts = async () =>{
 
 const getPostById = async (id) =>{
   if(id && id !== undefined){
-  const cachedPost = await postCache.get(id)
-  if(cachedPost){
-    return JSON.parse(cachedPost);
-  }else{
+    
   const post = await Post.findById(id)
  await postCache.set(id,JSON.stringify(post))
   return post
-  }
   }else{
     return "No id"
   }
@@ -71,7 +67,8 @@ const getAllPostByUser = async (id,query) =>{
 const createPost = async (body) =>{
   const post = await Post.create(body)
   if(post) {
-    postCache.set(post._id,JSON.stringify(post))
+    console.log(post);
+    postCache.set(post._id.toString(),JSON.stringify(post))
     return post 
     
   }
