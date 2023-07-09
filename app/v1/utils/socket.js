@@ -1,7 +1,10 @@
 // socket.js
 const {
   likePost,
-  commentOnPost
+  commentOnPost,
+  unlikePost,
+  retweetPost,
+  unretweetPost
 } = require("./utils.js")
 let io;
 function initializeSocket(server,Server) {
@@ -15,16 +18,45 @@ function initializeSocket(server,Server) {
     console.log('New client connected');
 
     // Handle custom events
-    socket.on('likePost', ({postId,userId})=>{
+    socket.on('likepost', ({postId,userId})=>{
        const post = likePost(postId,userId)
-      if(typeof(post).toLowerCase() === "object"){
-      io.emit("likedPost",post)
-      }else{
-        io.emit("errorLiking")
-      }
+       post
+       .then(res =>{
+          io.emit(`likedpost-${postId}`,res)
+       }).catch(e=>{
+         io.emit("error")
+       })
+      
+    });
+    socket.on('unlikepost', ({postId,userId})=>{
+       const post = unlikePost(postId,userId)
+        post
+       .then(res =>{
+          io.emit(`unlikedpost-${postId}`,res)
+       }).catch(e=>{
+         io.emit("error")
+       })
+    });
+    socket.on('retweetpost', ({postId,userId})=>{
+       const res = retweetPost(postId,userId)
+       res
+       .then(data =>{
+          io.emit(`retweetedpost-${postId}`,data)
+       }).catch(e=>{
+         io.emit("error")
+       })
+    });
+    socket.on('unretweetpost', ({postId,userId})=>{
+       const res = unretweetPost(postId,userId)
+       res
+       .then(data =>{
+          io.emit(`unretweetedpost-${postId}`,data)
+       }).catch(e=>{
+         io.emit("error")
+       })
     });
     
-    socket.on('commentOnPost', ({postId,userId, comment})=>{
+    socket.on('commentonpost', ({postId,userId, comment})=>{
       const post = commentOnPost(postId,userId, comment)
       if(typeof(post).toLowerCase() === "object"){
       io.emit("commentedOnPost",post)
@@ -33,6 +65,7 @@ function initializeSocket(server,Server) {
       }
     });
     socket.on('test', (data)=>{
+      console.log(data);
       io.emit('tested',data)
     });
     socket.emit('connected', 'Successfully connected to the server');
