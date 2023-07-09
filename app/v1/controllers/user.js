@@ -13,6 +13,7 @@ const logOutUser = async (req,res,next) => {
   })
 }
 const oauthLogin = async (req,res,next) =>{
+  console.log(req.body);
   const { email  } = req.body;
   console.log(email)
   const response = await User.findOne({email:email});
@@ -30,10 +31,10 @@ const oauthLogin = async (req,res,next) =>{
       phone: user.phone,
        password:user.password,
        retweets:[],
-       token:generateToken(user._id)
+       token:generateToken(response._id)
     }})
   }else{
-    res.status(500).json({error:"This account doesn't exist"})
+    res.status(404).json({error:"This account doesn't exist"})
   }
 }
 const authUser = async (req,res,next) =>{
