@@ -4,10 +4,10 @@ const Comment = require("../models/Comment");
 const Like = require("../models/Like");
 const createPost = async (req,res,next)=>{
   const dPost = await post.createPost(req.body)
+  if(typeof dPost === "object"){
   const user = req.user;
   user.posts.push(dPost._id)
   await user.save()
-  if(typeof dPost === "object"){
     console.log(dPost)
     res.status(200).json({post:dPost})
 
@@ -58,10 +58,58 @@ const likePost = async (req,res)=>{
       author:user._id,
       post:id
     })
-    dPost.likes.push(_id)
+    dPost.likes.push(user._id)
     await dPost.save()
     console.log(dPost)
        post.postCache.set(id,JSON.stringify(dPost))
+    res.status(200).json({post:dPost})
+  } else {
+    res.status(404).json({error: "Could not find the post"})
+  }
+}
+const unlikePost = async (req,res)=>{
+  const { id } = req.params;
+  const dPost = await Post.findById(id);
+  const user = req.user;
+  if (dPost) {
+    
+    const newLikes = dPost.likes.filter(like=> like.toString() !== user._id.toString())
+    dPost.likes = newLikes
+    await dPost.save()
+    console.log(dPost)
+    res.status(200).json({post:dPost})
+  } else {
+    res.status(404).json({error: "Could not find the post"})
+  }
+}
+const retweetPost = async (req,res)=>{
+  const { id } = req.params;
+  const dPost = await Post.findById(id);
+  const user = req.user;
+  if (dPost) {
+    user.retweets.push(dPost._id)
+    dPost.retweets.push(user._id)
+    await user.save()
+    await dPost.save()
+    console.log(user)
+    res.status(200).json({post:dPost})
+  } else {
+    res.status(404).json({error: "Could not find the post"})
+  }
+}
+const unretweetPost = async (req,res)=>{
+  const { id } = req.params;
+  const dPost = await Post.findById(id);
+  const user = req.user;
+  if (dPost) {
+    
+    const newPosts = user.retweets.filter(postId => postId.toString() !== dPost._id.toString())
+    const newPost = dPost.retweets.filter(postId => postId.toString() !== user._id.toString())
+    user.retweets = newPosts
+    dPost.retweets = newPost
+   await user.save()
+   await dPost.save()
+    console.log(user)
     res.status(200).json({post:dPost})
   } else {
     res.status(404).json({error: "Could not find the post"})
@@ -103,15 +151,6 @@ const delPost = async (req,res,next)=>{
   }
 }
 
-const retweetPost = async (req,res,next)=>{
-  const { userId,postId } = req.body;
-  const user = req.user;
-   user.retweets.push(postId);
- await user.save()
- res.status(200).json({user:user})
-  
-}
-
 module.exports = {
   createPost,
   delPost,
@@ -121,5 +160,7 @@ module.exports = {
   userPost,
   commentPost,
   likePost,
-  retweetPost
+  retweetPost,
+  unlikePost,
+  unretweetPost
 }
