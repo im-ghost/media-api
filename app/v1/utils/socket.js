@@ -1,6 +1,8 @@
 // socket.js
 const {
   likePost,
+  likecomment,
+  unlikecomment,
   commentOnPost,
   unlikePost,
   retweetPost,
@@ -57,12 +59,34 @@ function initializeSocket(server,Server) {
     });
     
     socket.on('commentonpost', ({postId,userId, comment})=>{
-      const post = commentOnPost(postId,userId, comment)
-      if(typeof(post).toLowerCase() === "object"){
-      io.emit("commentedOnPost",post)
-      }else{
-        io.emit("errorCommenting")
-      }
+      const post = commentOnPost(comment,userId,postId)
+      post
+      .then(res =>{
+      io.emit(`commentedonpost-${postId}`,res)
+      })
+      .catch(e=>{
+        io.emit("error")
+      })
+    });
+    socket.on('likecomment', ({userId, commentId})=>{
+      const post = likecomment(commentId,userId)
+      post
+      .then(res =>{
+      io.emit(`likedcomment-${commentId}`,res)
+      })
+      .catch(e=>{
+        io.emit("error")
+      })
+    });
+    socket.on('unlikecomment', ({userId, commentId})=>{
+      const post = unlikecomment(commentId,userId)
+      post
+      .then(res =>{
+      io.emit(`unlikedcomment-${commentId}`,res)
+      })
+      .catch(e=>{
+        io.emit("error")
+      })
     });
     socket.on('test', (data)=>{
       console.log(data);

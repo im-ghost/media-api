@@ -19,6 +19,21 @@ const likePost = async (id,userId)=>{
    throw new Error("Couldn't find post")
   }
 }
+const likecomment = async (commentId,userId)=>{
+  const comment = await Comment.findById(id);
+  if (comment) {
+    const { _id } = await Like.create({
+      author:userId,
+      post:commentId
+    })
+    comment.likes.push(userId)
+    await comment.save()
+    console.log(comment)
+       return comment;
+  } else {
+   throw new Error("Couldn't find post")
+  }
+}
 const unlikePost = async (id,userId)=>{
   
   const dPost = await Post.findById(id);
@@ -29,6 +44,20 @@ const unlikePost = async (id,userId)=>{
     await dPost.save()
     console.log(dPost)
     return dPost;
+  } else {
+    throw new Error("Couldn't get post")
+  }
+}
+const unlikecomment = async (commentId,userId)=>{
+  
+  const comment = await Comment.findById(commentId);
+  if (comment) {
+    
+    const newLikes = comment.likes.filter(like=> like.toString() !== userId.toString())
+    comment.likes = newLikes
+    await comment.save()
+    console.log(comment)
+    return comment;
   } else {
     throw new Error("Couldn't get post")
   }
@@ -75,17 +104,20 @@ const unretweetPost = async (id,userId)=>{
 const commentOnPost = async(comment,userId,postId) =>{
  
   const post = await Post.findById(postId);
-  const user = await User.findById(userId)
-  if (post) {
+  const user = await User.findById(userId);
+ 
+  if(post && user) {
+    console.log("no error");
     const { _id } = await Comment.create({
-      author:user._id,
+      author:userId,
       content:comment,
-      post:id
+      post:postId
     })
     post.comments.push(_id)
     await post.save()
     return post
   } else {
+    console.log(error);
     throw new Error("Could not find the post")
   }
 }
@@ -96,5 +128,7 @@ module.exports = {
   commentOnPost,
   unlikePost,
   retweetPost,
-  unretweetPost
+  unretweetPost,
+  likecomment,
+  unlikecomment
 }
