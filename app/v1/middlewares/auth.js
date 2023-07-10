@@ -58,9 +58,28 @@ const protectPost = async (req,res,next) =>{
     res.status(400).json({"error":"No user"})
   }
 }
+const protectComment = async (req,res,next) =>{
+  const { _id } = req.user
+  if (_id) {
+    console.log(req.body)
+    const comment= Comment.findById(req.params.id)
+    if(comment){
+    if (_id.toHexString() === comment.author) {
+      next()
+    } else {
+      res.status(400).json({"error":"Not authorized"})
+    }
+    }else{
+      res.status(400).json({"error":"No comment"})
+    }
+  } else {
+    res.status(400).json({"error":"No user"})
+  }
+}
 module.exports = {
   protect,
   protectMe,
   protectPost,
-  generateToken
+  generateToken,
+  protectComment
 }
