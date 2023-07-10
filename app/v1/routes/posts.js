@@ -8,34 +8,25 @@ const {
   posts,
   posT,
   userPost,
-  commentPost,
-  likePost,
-  retweetPost,
-  unlikePost,
-  unretweetPost
+  getComment,
+  deleteComment,
+  editComment
 } = require("../controllers/post")
 const {
   protect,
   protectMe,
-  protectPost
+  protectPost,
+  protectComment
  } = require("../middlewares/auth")
 /* GET posts listing. */
 router.route("/").get(protect,posts).post(protect,createPost);
+router.route("/comments/:id").get(getComment).put(protect,protectComment,editComment).delete(protect,protectComment,deleteComment);
 // Get a user's post listings 
 router.post('/post/user/:id',userPost);
 // Get a post by id
 router.get('/post/:id',posT);
 // Update a posts information 
 // delete a post's account 
-
-router.put("/post/like/:id/",protect,likePost)
-// comment on a post 
-router.put("/post/comment/:id/",protect,commentPost)
-router.put("/post/like/:id/",protect,likePost)
-router.put("/post/unlike/:id/",protect,unlikePost)
-// retweet on a post 
-router.put("/post/retweet/:id/",protect,retweetPost)
-router.put("/post/unretweet/:id/",protect,unretweetPost)
 router.delete('/post/:id/:author',protect,protectPost,delPost);
 
 router.put('/post/:id/:author',protect,protectPost,editPost);
