@@ -24,7 +24,7 @@ router.post('/login',authUser);
 router.post('/ologin',oauthLogin);
 router.post('/logout',logOutUser);
 // Get a user by id
-router.route('/user/:id').get(protect,user).put(protect,protectMe,editUser).delete(protect,protectMe,delUser);
+router.route('/user/:id').get(user).put(protect,protectMe,editUser).delete(protect,protectMe,delUser);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
 
