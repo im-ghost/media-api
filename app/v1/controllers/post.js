@@ -30,87 +30,13 @@ const editPost = async (req,res)=>{
     res.status(404).json({error: "Could not find the post"})
   }
 }
-const commentPost = async (req,res)=>{
-  const { comment } = req.body;
-  const { id } = req.params
-  const dPost = await Post.findById(id);
-  const user = req.user;
-  if (dPost) {
-    const { _id } = await Comment.create({
-      author:user._id,
-      content:comment,
-      post:id
-    })
-    dPost.comments.push(_id)
-    await dPost.save()
-       post.postCache.set(dPost._id,JSON.stringify(dPost))
-    res.status(200).json({post:dPost})
-  } else {
-    res.status(404).json({error: "Could not find the post"})
-  }
-}
-const likePost = async (req,res)=>{
+const editComment = async (req,res)=>{
   const { id } = req.params;
-  const dPost = await Post.findById(id);
-  const user = req.user;
-  if (dPost) {
-    const { _id } = await Like.create({
-      author:user._id,
-      post:id
-    })
-    dPost.likes.push(user._id)
-    await dPost.save()
-    console.log(dPost)
-       post.postCache.set(id,JSON.stringify(dPost))
-    res.status(200).json({post:dPost})
-  } else {
-    res.status(404).json({error: "Could not find the post"})
-  }
-}
-const unlikePost = async (req,res)=>{
-  const { id } = req.params;
-  const dPost = await Post.findById(id);
-  const user = req.user;
-  if (dPost) {
-    
-    const newLikes = dPost.likes.filter(like=> like.toString() !== user._id.toString())
-    dPost.likes = newLikes
-    await dPost.save()
-    console.log(dPost)
-    res.status(200).json({post:dPost})
-  } else {
-    res.status(404).json({error: "Could not find the post"})
-  }
-}
-const retweetPost = async (req,res)=>{
-  const { id } = req.params;
-  const dPost = await Post.findById(id);
-  const user = req.user;
-  if (dPost) {
-    user.retweets.push(dPost._id)
-    dPost.retweets.push(user._id)
-    await user.save()
-    await dPost.save()
-    console.log(user)
-    res.status(200).json({post:dPost})
-  } else {
-    res.status(404).json({error: "Could not find the post"})
-  }
-}
-const unretweetPost = async (req,res)=>{
-  const { id } = req.params;
-  const dPost = await Post.findById(id);
-  const user = req.user;
-  if (dPost) {
-    
-    const newPosts = user.retweets.filter(postId => postId.toString() !== dPost._id.toString())
-    const newPost = dPost.retweets.filter(postId => postId.toString() !== user._id.toString())
-    user.retweets = newPosts
-    dPost.retweets = newPost
-   await user.save()
-   await dPost.save()
-    console.log(user)
-    res.status(200).json({post:dPost})
+  const comment = await Comment.findById(id);
+  if (comment) {
+    comment.content = req.body.content;
+    await comment.save()
+    res.status(200).json({comment:comment})
   } else {
     res.status(404).json({error: "Could not find the post"})
   }
@@ -141,6 +67,14 @@ const posT = async (req,res,next)=>{
     res.status(400).json({error: dPost})
   }
 }
+const getComment = async (req,res,next)=>{
+  const comment = await Comment.findById(req.params.id.toString());
+  if(comment){
+    res.status(200).json({comment:comment})
+  }else{
+    res.status(400).json({error: dPost})
+  }
+}
 const delPost = async (req,res,next)=>{
   const dPost = await post.delPost(req.params.id);
   if(dPost){
@@ -150,7 +84,15 @@ const delPost = async (req,res,next)=>{
     res.status(400).json({error: dPosts})
   }
 }
-
+const deleteComment = async (req,res,next)=>{
+  const comment = await Comment.findById(req.params.id)
+  if(comment){
+   await Comment.findByIdAndDelete(req.params.id)
+    res.status(200).json({response:"Successful"})
+  }else{
+    res.status(400).json({error: "Unabale to delete comment"})
+  }
+}
 module.exports = {
   createPost,
   delPost,
@@ -158,9 +100,7 @@ module.exports = {
   posts,
   posT,
   userPost,
-  commentPost,
-  likePost,
-  retweetPost,
-  unlikePost,
-  unretweetPost
+  getComment,
+  deleteComment,
+  editComment
 }
