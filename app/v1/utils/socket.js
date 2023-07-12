@@ -72,6 +72,7 @@ function initializeSocket(server,Server) {
       const post = likecomment(commentId,userId)
       post
       .then(res =>{
+        console.log("emmited");
       io.emit(`likedcomment-${commentId}`,res)
       })
       .catch(e=>{
@@ -93,9 +94,9 @@ function initializeSocket(server,Server) {
       io.emit('tested',data)
     });
     socket.emit('connected', 'Successfully connected to the server');
-  socket.on('disconnect', () => {
+/*  socket.on('disconnect', () => {
     console.log('Client disconnected');
-  });
+  });*/
 
   });
 }

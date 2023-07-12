@@ -22,9 +22,14 @@ const getPostById = async (id) =>{
 
 const delPost = async (id) =>{
   const post = await Post.findById(id)
+  
   if (post) {
+    const author= post.author;
+  const user= await User.findById(author);
+  const newPosts = user.posts.filter(post=> post !== id);
+  user.posts = newPosts;
+  await user.sav()
    await Post.findByIdAndDelete(id)
-   postCache.take(id)
     return true
   } else {
     return "Post not found"

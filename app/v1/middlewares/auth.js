@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Comment = require("../models/Comment");
 const generateToken = (userId) =>{
   const id = userId.toString();
    const token = jwt.sign({id},process.env.SECRET,{
@@ -62,11 +63,12 @@ const protectComment = async (req,res,next) =>{
   const { _id } = req.user
   if (_id) {
     console.log(req.body)
-    const comment= Comment.findById(req.params.id)
+    const comment= await Comment.findById(req.params.id)
     if(comment){
-    if (_id.toHexString() === comment.author) {
+    if (_id.toHexString() === comment.author.toHexString()) {
       next()
     } else {
+      console.log("Not authorized");
       res.status(400).json({"error":"Not authorized"})
     }
     }else{

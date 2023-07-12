@@ -20,7 +20,10 @@ const likePost = async (id,userId)=>{
   }
 }
 const likecomment = async (commentId,userId)=>{
-  const comment = await Comment.findById(id);
+  console.log("likecomment");
+  console.log(commentId);
+  const comment = await Comment.findById(commentId);
+  console.log(comment);
   if (comment) {
     const { _id } = await Like.create({
       author:userId,
@@ -31,6 +34,7 @@ const likecomment = async (commentId,userId)=>{
     console.log(comment)
        return comment;
   } else {
+    console.log("Error");
    throw new Error("Couldn't find post")
   }
 }
@@ -59,6 +63,7 @@ const unlikecomment = async (commentId,userId)=>{
     console.log(comment)
     return comment;
   } else {
+    console.log("Error");
     throw new Error("Couldn't get post")
   }
 }

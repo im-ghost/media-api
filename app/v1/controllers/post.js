@@ -24,7 +24,7 @@ const editPost = async (req,res)=>{
         dPost[key] = body[key] ? body[key] : dPost[key]
     }
     await dPost.save()
-    post.postCache.set(dPost._id,JSON.stringify(dPost))
+  
     res.status(200).json({post:dPost})
   } else {
     res.status(404).json({error: "Could not find the post"})
@@ -72,7 +72,7 @@ const getComment = async (req,res,next)=>{
   if(comment){
     res.status(200).json({comment:comment})
   }else{
-    res.status(400).json({error: dPost})
+    res.status(400).json({error: "Couldn't find comment"})
   }
 }
 const delPost = async (req,res,next)=>{
@@ -87,6 +87,10 @@ const delPost = async (req,res,next)=>{
 const deleteComment = async (req,res,next)=>{
   const comment = await Comment.findById(req.params.id)
   if(comment){
+  const post = await Post.findById(comment.post);
+  const newComments = post.comments.filter(com=>com !== req.params.id)
+  post.comments = newComments;
+  await post.save()
    await Comment.findByIdAndDelete(req.params.id)
     res.status(200).json({response:"Successful"})
   }else{
