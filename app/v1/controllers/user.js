@@ -132,6 +132,17 @@ const followUser = async (req,res,next) =>{
     res.status(500).json({error:"Server Error"})
   }
 }
+const unfollowUser = async (req,res,next) =>{
+   const { id } = req.params;
+   const response = await user.unfollowUser(req.user, id)
+  if(typeof response === "string"){
+    res.status(401).json({error:response})
+  }else if(typeof response === "object"){
+    res.status(200).json({user:response})
+  }else{
+    res.status(500).json({error:"Server Error"})
+  }
+}
 
 
 
@@ -143,6 +154,7 @@ module.exports = {
   users,
   useR,
   followUser,
+  unfollowUser,
   logOutUser,
   oauthLogin
 }
