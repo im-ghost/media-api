@@ -100,6 +100,29 @@ const followUser = async (usER,id) =>{
     return "User not found"
   }
 }
+const unfollowUser = async (usER,id) =>{
+  
+  const user = await User.findById(id);
+  const userFollowing = usER;
+  if (user && userFollowing) {
+    if(user.followers.includes(userFollowing._id) && userFollowing.following.includes(user._id)){
+      const newFollowers = user.followers.filter(useR => useR._id !== userFollowing._id);
+      user.followers = newFollowers;
+  
+      const newFollowing = userFollowing.following.filter(useR => useR._id !== user._id);
+      user.following = newFollowing;
+  
+   userFollowing.following.push(id)
+  const userFollowed = await user.save();
+    const updatedUser = await userFollowing.save()
+    return {userFollowing:updatedUser,userFollowed:userFollowed}
+    }else{
+      return "Not following user"
+    }
+  } else {
+    return "User not found"
+  }
+}
 const authUser = async (email,password) =>{
   if(!email){
     return 'No email'
@@ -142,5 +165,6 @@ module.exports = {
   createUser,
   delUser,
   followUser,
+  unfollowUser,
   userCache
 }
