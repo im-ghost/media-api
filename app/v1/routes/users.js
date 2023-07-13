@@ -8,6 +8,7 @@ const {
   users,
   useR:user,
   followUser,
+  unfollowUser,
   logOutUser,
   oauthLogin
 } = require("../controllers/user")
@@ -27,5 +28,6 @@ router.post('/logout',logOutUser);
 router.route('/user/:id').get(user).put(protect,protectMe,editUser).delete(protect,protectMe,delUser);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
+router.post("/user/:id/unfollow",protect,unfollowUser)
 
 module.exports = router;
