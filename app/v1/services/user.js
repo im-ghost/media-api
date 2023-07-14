@@ -60,7 +60,7 @@ const createUser = async (name, email,password, phone, bio,image) =>{
 
   if (user) {
     let id = user._id.toString()
-    userCache.set(id,JSON.stringify(user))
+   
       return {
       _id: user._id,
       name: user.name,
@@ -132,7 +132,7 @@ const authUser = async (email,password) =>{
   }else{
   const user = await User.findOne({ email })
   if (user){
-     userCache.set(user._id,JSON.stringify(user))
+    
      if(await user.matchPassword(password)) {
    
     return {
