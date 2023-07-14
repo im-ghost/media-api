@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Notification = require("../models/Notification");
 const user = require("../services/user");
 
 const {
@@ -107,13 +108,12 @@ const editUser = async (req,res,next) =>{
 }
 const users = async (req,res,next) =>{
   const users = await User.find({});
-  console.log(users)
   res.status(200).json({users:users})
 }
 const useR = async (req,res,next) =>{
   const { id } = req.params;
-  if(id !== undefined){
-  const user = await User.findById(id);
+  if(id){
+  const user = await User.findById(id.toString());
   if (user) {
     res.status(200).json({user:user})
   } else {
@@ -143,7 +143,40 @@ const unfollowUser = async (req,res,next) =>{
     res.status(500).json({error:"Server Error"})
   }
 }
-
+const getNotifications = async (req,res) => {
+  try{
+  const user = req.user;
+  res.status(200).json({notifications:user.notifications})
+  }catch(e){
+    res.status(500).json({error:"An error occured"})
+  }
+}
+const deleteNotification = async (req,res)=>{
+  const { id } = req.body;
+  const user = req.user;
+  const notification = req.notification;
+  if(user.notifications.includes(notification._id)){
+    let newNots = user.notifications.filter((not)=> not._id !== notification._id);
+    user.notifications = newNots;
+    await user.save();
+    await Notification.findByIdAndDelete(notification._id);
+    res.status(200).json({message:"Deleted "})
+  }
+}
+const postNotification = async (req,res) =>{
+  const { content } = req.body;
+  const notification = await Notification.create({
+    author:req.user._id,
+    content:content
+  })
+  req.user.notifications.push(notification._id);
+  await req.user.save()
+  if(notification){
+    res.status(200).json({notification:notification})
+  }else{
+    res.status(400).json({error:"Error creating notification "})
+  }
+}
 
 
 module.exports = {
@@ -156,5 +189,8 @@ module.exports = {
   followUser,
   unfollowUser,
   logOutUser,
-  oauthLogin
+  oauthLogin,
+  getNotifications,
+  postNotification,
+  deleteNotification
 }
