@@ -1,5 +1,5 @@
 Arguments: 
-  /data/data/com.termux/files/usr/bin/node /data/data/com.termux/files/usr/bin/yarn
+  /data/data/com.termux/files/usr/bin/node /data/data/com.termux/files/usr/bin/yarn p
 
 PATH: 
   /data/data/com.termux/files/usr/bin
@@ -14,7 +14,12 @@ Platform:
   android arm
 
 Trace: 
-  Error: ENOENT: no such file or directory, open '/data/data/com.termux/files/home/.cache/yarn/v6/npm-content-disposition-0.5.4-8b82b4efac82512a02bb0b1dcec9d2c5e8eb5bfe-integrity/node_modules/content-disposition/.yarn-metadata.json'
+  SyntaxError: /data/data/com.termux/files/home/media-api/package.json: Expected double-quoted property name in JSON at position 172
+      at JSON.parse (<anonymous>)
+      at /data/data/com.termux/files/usr/lib/node_modules/yarn/lib/cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (/data/data/com.termux/files/usr/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /data/data/com.termux/files/usr/lib/node_modules/yarn/lib/cli.js:321:13
 
 npm manifest: 
   {
@@ -23,7 +28,8 @@ npm manifest:
     "private": true,
     "scripts": {
       "start": "node app.js",
-      "dev": "nodemon app.js"
+      "dev": "nodemon app.js",
+      "p": "nodemon populate.js",
     },
     "engines":{
       "node":">=20.2.0"
