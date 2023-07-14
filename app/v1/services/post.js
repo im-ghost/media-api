@@ -2,10 +2,7 @@ const Post = require("../models/Post")
 const NodeCache = require( "node-cache" );
 const postCache = new NodeCache();
 const posts = async () =>{
-  const posts = await Post.find({})
-
-  
-
+  const posts = await Post.find();
   return posts
 }
 
