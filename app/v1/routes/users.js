@@ -10,11 +10,15 @@ const {
   followUser,
   unfollowUser,
   logOutUser,
-  oauthLogin
+  oauthLogin,
+  getNotifications,
+  postNotification,
+  deleteNotification
 } = require("../controllers/user")
 const {
   protect,
-  protectMe
+  protectMe,
+  protectNotification
  } = require("../middlewares/auth")/*
  const multer = require("multer")
  const upload = multer({ destination :"upload/"});*/
@@ -26,6 +30,7 @@ router.post('/ologin',oauthLogin);
 router.post('/logout',logOutUser);
 // Get a user by id
 router.route('/user/:id').get(user).put(protect,protectMe,editUser).delete(protect,protectMe,delUser);
+router.route('/user/:id/notifications').get(protect,getNotifications).post(protect,postNotification).delete(protect,protectNotification,deleteNotification);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
 router.post("/user/:id/unfollow",protect,unfollowUser)
