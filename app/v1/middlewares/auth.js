@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const Notification = require("../models/Notification");
 const generateToken = (userId) =>{
   const id = userId.toString();
    const token = jwt.sign({id},process.env.SECRET,{
@@ -78,10 +79,31 @@ const protectComment = async (req,res,next) =>{
     res.status(400).json({"error":"No user"})
   }
 }
+const protectNotification = async (req,res,next) =>{
+  const { _id } = req.user
+  if (_id) {
+    console.log(req.body)
+    const notification = await Comment.findById(req.params.id)
+    if(notification){
+    if (_id.toHexString() === notification.author.toHexString()) {
+      req.notification = notification;
+      next()
+    } else {
+      console.log("Not authorized");
+      res.status(400).json({"error":"Not authorized"})
+    }
+    }else{
+      res.status(400).json({"error":"No Notification"})
+    }
+  } else {
+    res.status(400).json({"error":"No user"})
+  }
+}
 module.exports = {
   protect,
   protectMe,
   protectPost,
   generateToken,
-  protectComment
+  protectComment,
+  protectNotification
 }
