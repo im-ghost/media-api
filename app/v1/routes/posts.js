@@ -19,7 +19,7 @@ const {
   protectComment
  } = require("../middlewares/auth")
 /* GET posts listing. */
-router.route("/").get(protect,posts).post(protect,createPost);
+router.route("/").get(posts).post(protect,createPost);
 router.route("/comments/:id").get(getComment).put(protect,protectComment,editComment).delete(protect,protectComment,deleteComment);
 // Get a user's post listings 
 router.post('/post/user/:id',userPost);
