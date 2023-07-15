@@ -14,11 +14,11 @@ const logOutUser = async (req,res,next) => {
   })
 }
 const oauthLogin = async (req,res,next) =>{
-  console.log(req.body);
+ 
   const { email  } = req.body;
-  console.log(email)
+ 
   const response = await User.findOne({email:email});
-  console.log(response)
+  
   if(response){
     res.status(200).json({user:{
        _id: response._id,
@@ -83,7 +83,7 @@ const editUser = async (req,res,next) =>{
    
   const user = await User.findById(id);
   if (user) {
-    console.log(user)
+   
     for(const attr in user){
       if(req.body[attr]){
         if(attr === "password"){
@@ -94,7 +94,7 @@ const editUser = async (req,res,next) =>{
     user[attr] = req.body[attr]
         }
       }else{
-        console.log("   ")
+       
       }
     }
     const updatedUser = await user.save()
@@ -146,6 +146,7 @@ const unfollowUser = async (req,res,next) =>{
 const getNotifications = async (req,res) => {
   try{
   const user = req.user;
+  console.log(user);
   res.status(200).json({notifications:user.notifications})
   }catch(e){
     res.status(500).json({error:"An error occured"})

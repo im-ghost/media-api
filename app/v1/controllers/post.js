@@ -8,7 +8,7 @@ const createPost = async (req,res,next)=>{
   const user = req.user;
   user.posts.push(dPost._id)
   await user.save()
-    console.log(dPost)
+    
     res.status(200).json({post:dPost})
 
   }else{
