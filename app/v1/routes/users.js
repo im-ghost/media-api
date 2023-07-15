@@ -31,7 +31,7 @@ router.post('/logout',logOutUser);
 // Get a user by id
 router.route('/user/:id').get(user).put(protect,protectMe,editUser).delete(protect,protectMe,delUser);
 router.route('/user/:id/notifications').get(protect,getNotifications).post(protect,postNotification)
-route.delete("/user/:id/notifications/notificationId",protect,protectNotification,deleteNotification);
+router.delete("/user/:id/notifications/notificationId",protect,protectNotification,deleteNotification);
 // follow user
 router.post("/user/:id/follow",protect,followUser)
 router.post("/user/:id/unfollow",protect,unfollowUser)
