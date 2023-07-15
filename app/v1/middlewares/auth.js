@@ -83,7 +83,7 @@ const protectNotification = async (req,res,next) =>{
   const { _id } = req.user
   if (_id) {
     console.log(req.body)
-    const notification = await Comment.findById(req.params.id)
+    const notification = await Notification.findById(req.params.notificationId)
     if(notification){
     if (_id.toHexString() === notification.author.toHexString()) {
       req.notification = notification;
