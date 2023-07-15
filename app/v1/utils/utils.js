@@ -6,7 +6,10 @@ const Comment = require("../models/Comment");
 
 const likePost = async (id,userId)=>{
   const dPost = await Post.findById(id);
-  if (dPost) {
+  const user = await User.findById(userId);
+  console.log(dPost);
+  console.log(user);
+  if (dPost && user) {
     const { _id } = await Like.create({
       author:userId,
       post:id
@@ -14,17 +17,19 @@ const likePost = async (id,userId)=>{
     dPost.likes.push(userId)
     await dPost.save()
     console.log(dPost)
-       return dPost;
+       return {
+         post:dPost,
+         user
+       };
   } else {
    throw new Error("Couldn't find post")
   }
 }
 const likecomment = async (commentId,userId)=>{
-  console.log("likecomment");
-  console.log(commentId);
   const comment = await Comment.findById(commentId);
+  const user = await User.findById(userId);
   console.log(comment);
-  if (comment) {
+  if (comment && user) {
     const { _id } = await Like.create({
       author:userId,
       post:commentId
@@ -32,7 +37,10 @@ const likecomment = async (commentId,userId)=>{
     comment.likes.push(userId)
     await comment.save()
     console.log(comment)
-       return comment;
+       return {
+         comment,
+         user
+       };
   } else {
     console.log("Error");
    throw new Error("Couldn't find post")
@@ -120,7 +128,10 @@ const commentOnPost = async(comment,userId,postId) =>{
     })
     post.comments.push(_id)
     await post.save()
-    return post
+    return {
+      post,
+      user
+    }
   } else {
     console.log(error);
     throw new Error("Could not find the post")
