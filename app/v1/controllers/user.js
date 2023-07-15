@@ -145,9 +145,16 @@ const unfollowUser = async (req,res,next) =>{
 }
 const getNotifications = async (req,res) => {
   try{
+    const notifications = []
   const user = req.user;
-  console.log(user);
-  res.status(200).json({notifications:user.notifications})
+  console.log("Get notifications");
+  user.notifications.map((not)=>{
+    const notification = await Notification.findById(not);
+    if(not){
+    notifications.push(notification)
+    }
+  })
+  res.status(200).json({notifications:notifications})
   }catch(e){
     res.status(500).json({error:"An error occured"})
   }
