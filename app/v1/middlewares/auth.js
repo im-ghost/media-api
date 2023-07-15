@@ -24,13 +24,16 @@ const protect = async (req,res,next) =>{
       
       next()
       }else{
+        console.log("No user");
         res.status(400).json({"error":"Expired token,no user"})
       }
     }else{
+      console.log("expired token");
       res.status(400).json({"error":"Expired token"})
     }
   }
   else{
+    console.log("No token");
     res.status(400).json({"error":"No token"})
   }
 }
