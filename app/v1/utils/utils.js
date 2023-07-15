@@ -2,13 +2,16 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const Like = require("../models/Like");
 const Comment = require("../models/Comment");
+const {
+  generateToken
+} = require("../middlewares/auth");
 
 
 const likePost = async (id,userId)=>{
   const dPost = await Post.findById(id);
   const user = await User.findById(userId);
-  console.log(dPost);
-  console.log(user);
+ 
+ 
   if (dPost && user) {
     const { _id } = await Like.create({
       author:userId,
@@ -16,10 +19,13 @@ const likePost = async (id,userId)=>{
     })
     dPost.likes.push(userId)
     await dPost.save()
-    console.log(dPost)
+ 
        return {
          post:dPost,
-         user
+         user:{
+           ...user._doc,
+           token: generateToken(user._id)
+         }
        };
   } else {
    throw new Error("Couldn't find post")
@@ -28,7 +34,7 @@ const likePost = async (id,userId)=>{
 const likecomment = async (commentId,userId)=>{
   const comment = await Comment.findById(commentId);
   const user = await User.findById(userId);
-  console.log(comment);
+  
   if (comment && user) {
     const { _id } = await Like.create({
       author:userId,
@@ -36,13 +42,16 @@ const likecomment = async (commentId,userId)=>{
     })
     comment.likes.push(userId)
     await comment.save()
-    console.log(comment)
+   
        return {
          comment,
-         user
+         user:{
+           ...user._doc,
+           token: generateToken(user._id)
+         }
        };
   } else {
-    console.log("Error");
+    console.log("Error")
    throw new Error("Couldn't find post")
   }
 }
@@ -54,7 +63,7 @@ const unlikePost = async (id,userId)=>{
     const newLikes = dPost.likes.filter(like=> like.toString() !== userId.toString())
     dPost.likes = newLikes
     await dPost.save()
-    console.log(dPost)
+    
     return dPost;
   } else {
     throw new Error("Couldn't get post")
@@ -68,7 +77,7 @@ const unlikecomment = async (commentId,userId)=>{
     const newLikes = comment.likes.filter(like=> like.toString() !== userId.toString())
     comment.likes = newLikes
     await comment.save()
-    console.log(comment)
+  
     return comment;
   } else {
     console.log("Error");
@@ -85,9 +94,13 @@ const retweetPost = async (id,userId)=>{
     dPost.retweets.push(userId)
     await user.save()
     await dPost.save()
-    console.log(user)
+   
     return {
-      dPost,user
+      dPost,
+      user:{
+           ...user._doc,
+           token: generateToken(user._id)
+         }
     }
   } else {
     throw new Error("An error occurred ")
@@ -106,9 +119,13 @@ const unretweetPost = async (id,userId)=>{
     dPost.retweets = newPost
    await user.save()
    await dPost.save()
-    console.log(user)
+ 
     return{
-      dPost,user
+      dPost,
+      user:{
+           ...user._doc,
+           token: generateToken(user._id)
+         }
     }
   } else {
    throw new Error("An error occured")
@@ -130,7 +147,10 @@ const commentOnPost = async(comment,userId,postId) =>{
     await post.save()
     return {
       post,
-      user
+      user:{
+           ...user._doc,
+           token: generateToken(user._id)
+         }
     }
   } else {
     console.log(error);
