@@ -11,9 +11,7 @@ const {
   unfollowUser,
   logOutUser,
   oauthLogin,
-  getNotifications,
-  postNotification,
-  deleteNotification
+  myFeeds
 } = require("../controllers/user");
 const {
   protect,
@@ -26,13 +24,7 @@ router.post('/login', authUser);
 router.post('/ologin', oauthLogin);
 router.post('/logout', logOutUser);
 
-// Get notifications for a user
-router.route('/user/notifications/:id')
-  .get(protect, getNotifications)
-  .post(protect, postNotification);
-
-router.delete("/user/:id/notifications/:notificationId", protect, protectNotification, deleteNotification);
-
+router.get('/feeds',protect,myFeeds)
 // Follow/unfollow user
 router.post("/user/:id/follow", protect, followUser);
 router.post("/user/:id/unfollow", protect, unfollowUser);
