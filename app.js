@@ -8,6 +8,7 @@ const http = require("http");
 const indexRouter = require('./app/v1/routes/index');
 const usersRouter = require('./app/v1/routes/users');
 const notRouter = require('./app/v1/routes/not');
+const chatRouter = require('./app/v1/routes/chat');
 const postRouter = require('./app/v1/routes/posts');
 require("dotenv").config()
 const connectDB = require("./app/v1/config/db");
@@ -28,6 +29,7 @@ app.use('/api/v1/', indexRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/not', notRouter);
+app.use('/api/v1/chat', chatRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next)=>{
