@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const ChatSchema = new mongoose.Schema({
-  name: String,
   members: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -10,8 +9,6 @@ const ChatSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Message',
   }],
-  bio:String,
-  image:String
 });
 
 const Chat = mongoose.model('Chat', ChatSchema);
