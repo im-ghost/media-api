@@ -148,7 +148,7 @@ const getNotifications = async (req,res) => {
     const notifications = []
   const user = req.user;
   console.log("Get notifications");
-  user.notifications.map((not)=>{
+  user.notifications.map(async (not)=>{
     const notification = await Notification.findById(not);
     if(not){
     notifications.push(notification)
@@ -186,7 +186,19 @@ const postNotification = async (req,res) =>{
   }
 }
 
-
+const myFeeds = async (req,res) => {
+  const user = req.user;
+  try{
+  const { followers, following, _id} = user;
+  const posts = await Post.find();
+  const myFeeds = posts.filter(({author}) => followers.includes(author) || following.includes(author) || author.toString() === _id.toString());
+  res.status(200).json({posts:myFeeds})
+  return myFeeds;
+  }catch(e){
+    res.status(400).json({error:e})
+  }
+  
+}
 module.exports = {
   authUser,
   createUser,
@@ -200,5 +212,6 @@ module.exports = {
   oauthLogin,
   getNotifications,
   postNotification,
-  deleteNotification
+  deleteNotification,
+  myFeeds
 }
