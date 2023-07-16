@@ -11,7 +11,7 @@ const messageSchema = new Schema({
     ref: 'Chat',
     required: true,
   },
-  content: {
+  message: {
     type: String,
     required: true,
   },
@@ -22,4 +22,4 @@ const messageSchema = new Schema({
 });
 
 const Message = model("Message",messageSchema)
-module.exports = Messages;
+module.exports = Message;
