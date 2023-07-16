@@ -13,15 +13,12 @@ const generateToken = (userId) =>{
 const protect = async (req,res,next) =>{
   const token = req.headers.authorization;
   if (token) {
-   
     const decodedUser = jwt.verify(token,process.env.SECRET)
     if (decodedUser) {
       const { id } = decodedUser;
       const user = await User.findById(id)
-     
       if(user){
       req.user = user;
-      
       next()
       }else{
         console.log("No user");
@@ -53,7 +50,6 @@ const protectMe = async (req,res,next) =>{
 const protectPost = async (req,res,next) =>{
   const { _id } = req.user
   if (_id) {
-    console.log(req.body)
     if (_id.toHexString() === req.params.author) {
       next()
     } else {
@@ -66,7 +62,6 @@ const protectPost = async (req,res,next) =>{
 const protectComment = async (req,res,next) =>{
   const { _id } = req.user
   if (_id) {
-    console.log(req.body)
     const comment= await Comment.findById(req.params.id)
     if(comment){
     if (_id.toHexString() === comment.author.toHexString()) {
