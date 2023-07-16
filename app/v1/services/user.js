@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Post = require("../models/Post");
 const NodeCache = require( "node-cache" );
 const userCache = new NodeCache();
 const {
@@ -159,12 +160,22 @@ const authUser = async (email,password) =>{
   }
   }
 }
-
+const getUserFeeds = async (user) =>{
+  try{
+  const { followers, following, _id} = user;
+  const posts = await Post.find();
+  const myFeeds = posts.filter(({author}) => followers.includes(author) || following.includes(author) || author.toString() === _id.toString())
+  return myFeeds;
+  }catch(e){
+    throw new Error(e)
+  }
+}
 module.exports = {
   authUser,
   createUser,
   delUser,
   followUser,
   unfollowUser,
-  userCache
+  userCache,
+  getUserFeeds
 }
