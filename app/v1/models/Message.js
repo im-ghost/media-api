@@ -19,6 +19,10 @@ const messageSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  read:{
+    type:Boolean,
+    default:false
+  }
 });
 
 const Message = model("Message",messageSchema)
