@@ -1,11 +1,12 @@
 
 const Chat = require("../models/Chat");
+const User = require("../models/User");
 
 
 const createChat = async (req,res) => {
-  const { members } = req;
+  const { receiver } = req;
   const chat = await Chat.create({
-    members,
+    receiver,
     messages:[]
   });
   await req.user.chats.push(chat._id);
@@ -21,17 +22,9 @@ const getChat = async (req,res) =>{
   const { id } = req.params;
   const chat = await Chat.findById(id)
   if (chat) {
-    const { members, messages } = chat;
-    const users = [];
+    const { receiver, messages } = chat;
     const msgs = [];
-    members.map(async (member)=>{
-      const user = await User.findById(member);
-      if(user){
-        users.push(user)
-      }else{
-        res.status(400).json({error:"Unable to get chats users "})
-      }
-    })
+    const user = User.findById(receiver)
     messages.map(async (msg)=>{
       const message = await Message.findById(msg);
       if(messages){
@@ -42,7 +35,7 @@ const getChat = async (req,res) =>{
     })
     res.status(200).json({
       chat:{
-      members:users,
+      receiver:user,
       messages:msgs,
       id:chatId
       }
