@@ -16,8 +16,7 @@ const UserSchema = new Schema({
   },
 
   chats: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Chat',
+    type: String,
   }],
   bio: String,
   followers: [{
