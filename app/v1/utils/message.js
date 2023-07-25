@@ -16,9 +16,9 @@ const sendMessage = async ({
   });
   
   if (msg && chat) {
-    chat.messages.push(msg._id)
+    chat.messages.push(msg._id);
     await chat.save();
-    const allMessages = await Message.findOne({chat:chat._id})
+    const allMessages = await Message.find({chat:chat._id})
     return  allMessages
   } else {
     throw new Error("Unable to create Chat")
@@ -73,6 +73,7 @@ async function handleSendMessage({
   chatId,
   message
   })
+  console.log(chat);
   io.emit(`chatmessage-${chatId}`,chat)
   }catch(e){
     io.to(socketId).emit(`error`)
