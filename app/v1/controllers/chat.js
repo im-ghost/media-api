@@ -1,49 +1,85 @@
 
 const Chat = require("../models/Chat");
+const Message = require("../models/Message");
 const User = require("../models/User");
+const createChat = async (req, res) => {
+  const { receiver } = req.body;
+  const other = await User.findById(receiver);
+  const userChats = req.user.chats;
+  const otherChats = other.chats;
 
+  const existingChatId = `${req.user._id}${receiver}`;
+  const existingChatIdB = `${receiver}${req.user._id}`;
 
-const createChat = async (req,res) => {
-  const { receiver } = req;
-  const chat = await Chat.create({
-    receiver,
-    messages:[]
-  });
-  await req.user.chats.push(chat._id);
-  await req.user.save();
-  if (chat) {
-    res.status(200).json({chat:chat})
-  } else {
-    res.status(400).json({error:"Couldn't create chat"})
+  let dChat = null;
+  let chatFound = false;
+
+  for (const chat of userChats) {
+    if (chat.toString() === existingChatId || chat.toString() === existingChatIdB) {
+      try {
+        dChat = await Chat.findOne({chatId:chat});
+        console.log("dChat",dChat);
+        chatFound = true;
+        break;
+      } catch (error) {
+        // Handle error if Chat.findById fails
+        console.error("Error while finding chat:", error);
+      }
+    }
   }
-}
 
-const getChat = async (req,res) =>{
+  if (chatFound) {
+    res.status(200).json({ chat: dChat });
+  } else {
+    console.log("else");
+    const chat = await Chat.create({
+      receiver,
+      messages: [],
+      chatId: `${req.user._id}${receiver}`
+    });
+
+    req.user.chats.push(`${req.user._id}${receiver}`);
+    other.chats.push(`${req.user._id}${receiver}`);
+    await other.save();
+    await req.user.save();
+
+    if (chat) {
+      res.status(200).json({ chat: chat });
+    } else {
+      res.status(400).json({ error: "Couldn't create chat" });
+    }
+  }
+};
+
+
+const getChat = async (req, res) => {
   const { id } = req.params;
-  const chat = await Chat.findById(id)
+  const chat = await Chat.findById(id);
   if (chat) {
     const { receiver, messages } = chat;
     const msgs = [];
-    const user = User.findById(receiver)
-    messages.map(async (msg)=>{
+    const user = await User.findById(receiver);
+
+    await Promise.all(messages.map(async (msg) => {
       const message = await Message.findById(msg);
-      if(messages){
-        messages.push(message)
-      }else{
-        res.status(400).json({error:"Unable to get chats messages"})
+      if (message) {
+        msgs.push(message);
+      } else {
+        res.status(400).json({ error: "Unable to get chat messages" });
       }
-    })
-    res.status(200).json({
-      chat:{
-      receiver:user,
-      messages:msgs,
-      id:chatId
-      }
-    })
+    }));
+
+    const returnValue = {
+      receiver: user,
+      messages: msgs,
+      id: chat._id
+    };
+    res.status(200).json({ chat: returnValue });
   } else {
-    res.status(400).json({error:"Couldn't find chat"})
+    res.status(400).json({ error: "Couldn't find chat" });
   }
-}
+};
+
 
 const getAllUsersChats = async (req,res) =>{
   const { chats } = req.user;
