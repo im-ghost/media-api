@@ -115,7 +115,17 @@ const useR = async (req,res,next) =>{
   if(id){
   const user = await User.findById(id.toString());
   if (user) {
-    res.status(200).json({user:user})
+    const posts = []
+    await Promise.all(user.posts.map(async(post)=>{
+      const dPost = await Post.findById(post);
+      if (dPost) {
+        let others = {...dPost._doc,author:user}
+        posts.push(others)
+      }
+    }))
+    const other = {...user};
+    const rest = {...other._doc,posts:posts}
+    res.status(200).json({user:rest})
   } else {
     res.status(400).json({"error":"User not found"})
   }
@@ -148,12 +158,12 @@ const getNotifications = async (req,res) => {
     const notifications = []
   const user = req.user;
   console.log("Get notifications");
-  user.notifications.map(async (not)=>{
+ await Promise.all(user.notifications.map(async (not)=>{
     const notification = await Notification.findById(not);
     if(not){
     notifications.push(notification)
     }
-  })
+  }))
   res.status(200).json({notifications:notifications})
   }catch(e){
     res.status(500).json({error:"An error occured"})
@@ -190,9 +200,17 @@ const myFeeds = async (req,res) => {
   const user = req.user;
   try{
   const { followers, following, _id} = user;
-  const posts = await Post.find();
-  const myFeeds = posts.filter(({author}) => followers.includes(author) || following.includes(author) || author.toString() === _id.toString());
-  res.status(200).json({posts:myFeeds})
+  const postS = await Post.find();
+  const myFeeds = postS.filter(({author}) => followers.includes(author) || following.includes(author) || author.toString() === _id.toString());
+  const posts = []
+    await Promise.all(myFeeds.map(async(post)=>{
+      const dPost = await Post.findById(post);
+      if (dPost) {
+        let others = {...dPost._doc,author:user}
+        posts.push(others)
+      }
+    }))
+  res.status(200).json({posts:posts})
   return myFeeds;
   }catch(e){
     res.status(400).json({error:e})
