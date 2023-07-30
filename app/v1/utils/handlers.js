@@ -47,12 +47,15 @@ function initializeSocketHandlers(socketId,socket, io) {
   socket.on('sendMessage',({
   userId,
   chatId,
-  message}) => {
+  message,
+    
+  }) => {
     handleSendMessage({
        io, socketId,
   userId,
   chatId,
-  message
+  message,
+  
     })
   })
   socket.on('deleteMessage',({
@@ -76,8 +79,8 @@ function initializeSocketHandlers(socketId,socket, io) {
   message
     })
   })
-  socket.on('test', (data) => {
-    //handleTest(io, socketId, data);
+  socket.on('connect', (data) => {
+    io.emit(`${data}-online`)
   });
 
   socket.emit('connected', 'Successfully connected to the server');

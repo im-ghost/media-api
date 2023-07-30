@@ -2,6 +2,9 @@ const User = require('./app/v1/models/User');
 const Post = require('./app/v1/models/Post');
 const Like = require('./app/v1/models/Like');
 const Comment = require('./app/v1/models/Comment');
+const Notification = require('./app/v1/models/Notification');
+const Chat = require('./app/v1/models/Chat');
+const Message = require('./app/v1/models/Message');
 const bcrypt = require("bcryptjs");
 
 const connectDB = require("./app/v1/config/db");
@@ -97,6 +100,18 @@ function getRandomUser(users, userId) {
 // Function to create random users
 async function createRandomUsers() {
   await connectDB();
+  await User.deleteMany();
+  console.log("users deleted");
+  await Post.deleteMany();
+  console.log("posts delete");
+  await Notification.deleteMany()
+  await Chat.deleteMany()
+  console.log("chats deletd");
+  await Comment.deleteMany()
+  await Like.deleteMany()
+  console.log("like deleted");
+  await Message.deleteMany()
+  console.log("All deleteMany");
   const numUsers = 15; // Number of users to create
 
   const users = [];
@@ -110,8 +125,9 @@ async function createRandomUsers() {
       name: `User ${i + 1}`,
       email: `user${i + 1}@example.com`,
       phone:`${i}${i}${i+1}${i}${i+4}`,
-      bio:`User ${i} bio`,
+      bio:`User ${i+1} bio`,
       password: hash, // Set the password as desired
+      image:"/default.png"
     });
 
     users.push(user);

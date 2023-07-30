@@ -6,13 +6,14 @@ const User = require("../models/User");
 const sendMessage = async ({
   userId,
   chatId,
-  message
+  message,
+  
 }) => {
   const chat = await Chat.findById(chatId)
   const msg = await Message.create({
     sender:userId,
     chat:chatId,
-    message
+    message,
   });
   
   if (msg && chat) {
@@ -65,13 +66,15 @@ async function handleSendMessage({
   socketId,
   userId,
   chatId,
-  message
+  message,
+  
 }) {
   try{
   const chat = await sendMessage({
     userId,
   chatId,
-  message
+  message,
+  
   })
   console.log(chat);
   io.emit(`chatmessage-${chatId}`,chat)
