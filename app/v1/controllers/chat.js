@@ -85,12 +85,39 @@ const getAllUsersChats = async (req,res) =>{
   const { chats } = req.user;
   try {
    const response = [];
-   chats.map(async (c) =>{
-     const chat = await Chat.findById(c);
+   await Promise.all(chats.map(async (c) =>{
+     try{
+     const chat = await Chat.findOne({chatId:c});
      if(chat){
-       response.push(chat)
+       
+    const { receiver, messages } = chat;
+    const msgs = [];
+    const user = await User.findById(receiver);
+
+    await Promise.all(messages.map(async (msg) => {
+      const message = await Message.findById(msg);
+      if (message) {
+        msgs.push(message);
+      } else {
+        res.status(400).json({ error: "Unable to get chat messages" });
+      }
+    }));
+
+    const returnValue = {
+      receiver: user,
+      messages: msgs,
+      id: chat._id
+    };
+    
+ 
+       response.push(returnValue)
+      // console.log(returnValue);
      }
-   })
+     }catch(e){
+       console.log("Una",e);
+     }
+   }))
+ //  console.log(199);
    res.status(200).json({chats:response})
   } catch (e) {
     res.status(400).json({error:"unable to get chats"})
