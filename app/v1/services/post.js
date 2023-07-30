@@ -1,8 +1,19 @@
 const Post = require("../models/Post")
+const User = require("../models/User")
 const NodeCache = require( "node-cache" );
 const postCache = new NodeCache();
 const posts = async () =>{
-  const posts = await Post.find();
+  const postS = await Post.find();
+  const posts = []
+    await Promise.all(postS.map(async(post)=>{
+      const dPost = await Post.findById(post);
+      if (dPost) {
+        const user = await User.findById(author);
+        let others = {...dPost._doc,author:user}
+        posts.push(others)
+      }
+    }))
+    
   return posts
 }
 
@@ -40,7 +51,7 @@ const getAllPostByUser = async (id,query) =>{
     const limit = req.query.limit || 10
   const startIndex = req.query.start ||  0 
   const endIndex =  limit
-  const sortBy = req.query.sortBy || 'title'
+  const sortBy = req.query.sortBy || 'date'
   const sortOrder = req.query.sortOrder || 'asc'
   const filter = req.query.filter || ''
 
