@@ -138,7 +138,7 @@ const useR = async (req,res,next) =>{
       }
     }))
     const other = {...user};
-    const rest = {...other._doc,posts:posts,followers:followers,following:following}
+    const rest = {...other._doc,posts:posts,followers:followers,following:following,token:generateToken(other._doc._id)}
     res.status(200).json({user:rest})
   } else {
     res.status(400).json({"error":"User not found"})
