@@ -6,12 +6,10 @@ const posts = async () =>{
   const postS = await Post.find();
   const posts = []
     await Promise.all(postS.map(async(post)=>{
-      const dPost = await Post.findById(post);
-      if (dPost) {
-        const user = await User.findById(author);
-        let others = {...dPost._doc,author:user}
+        const user = await User.findById(post.author);
+        let others = {...post._doc,author:user}
         posts.push(others)
-      }
+      
     }))
     
   return posts

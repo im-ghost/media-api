@@ -115,7 +115,9 @@ const useR = async (req,res,next) =>{
   if(id){
   const user = await User.findById(id.toString());
   if (user) {
-    const posts = []
+    const posts = [];
+    const followers = [];
+    const following = []
     await Promise.all(user.posts.map(async(post)=>{
       const dPost = await Post.findById(post);
       if (dPost) {
@@ -123,8 +125,20 @@ const useR = async (req,res,next) =>{
         posts.push(others)
       }
     }))
+    await Promise.all(user.followers.map(async(user)=>{
+      const dUser = await User.findById(user);
+      if(dUser){
+        followers.push(dUser)
+      }
+    }))
+    await Promise.all(user.following.map(async(user)=>{
+      const dUser = await User.findById(user);
+      if(dUser){
+        following.push(dUser)
+      }
+    }))
     const other = {...user};
-    const rest = {...other._doc,posts:posts}
+    const rest = {...other._doc,posts:posts,followers:followers,following:following}
     res.status(200).json({user:rest})
   } else {
     res.status(400).json({"error":"User not found"})
@@ -182,10 +196,11 @@ const deleteNotification = async (req,res)=>{
   }
 }
 const postNotification = async (req,res) =>{
-  const { content } = req.body;
+  const { content,postId } = req.body;
   const notification = await Notification.create({
     author:req.user._id,
-    content:content
+    content,
+    postId
   })
   req.user.notifications.push(notification._id);
   await req.user.save()

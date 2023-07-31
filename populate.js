@@ -127,7 +127,7 @@ async function createRandomUsers() {
       phone:`${i}${i}${i+1}${i}${i+4}`,
       bio:`User ${i+1} bio`,
       password: hash, // Set the password as desired
-      image:"/default.png"
+      image:"https://richardmediaapp.netlify.app/logo192.jpg"
     });
 
     users.push(user);
@@ -148,6 +148,14 @@ createRandomUsers();
 
 async function makeUsersFollowEachOther() {
   await connectDB()
+  await User.deleteMany();
+  await Post.deleteMany();
+  await Like.deleteMany();
+  await Comment.deleteMany();
+  await Chat.deleteMany();
+  await Message.deleteMany();
+  await Notification.deleteMany();
+  console.log("All has been deleted");
   // Get all users from the database
   const users = await User.find();
 
