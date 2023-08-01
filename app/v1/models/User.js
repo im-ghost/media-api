@@ -46,6 +46,9 @@ const UserSchema = new Schema({
   image: {
     type:String
   },
+  imageName: {
+    type:String
+  },
 });/*
 UserSchema.pre("save", async function (next){
   console.log("presavs")
