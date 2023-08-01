@@ -18,7 +18,7 @@ const delUser = async (id) =>{
     return false
   }
 }
-const createUser = async (name, email,password, phone, bio,image) =>{
+const createUser = async (name, email,password, phone, bio,image,imageName) =>{
   
     if(!email){
     return "No Email"
@@ -56,7 +56,8 @@ const createUser = async (name, email,password, phone, bio,image) =>{
    chats: [],
    phone: phone,
   image:image,
-  retweets:[]
+  retweets:[],
+  imageName:imageName
   })
 
   if (user) {
